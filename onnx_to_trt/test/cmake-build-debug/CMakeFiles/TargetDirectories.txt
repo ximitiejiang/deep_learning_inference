@@ -1,0 +1,3 @@
+/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/test/cmake-build-debug/CMakeFiles/test.dir
+/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/test/cmake-build-debug/CMakeFiles/edit_cache.dir
