@@ -11,7 +11,7 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
 ```
-6. 调试：几个核心快捷键(可以考虑自定义快捷键把n, c, s, u, d设置出来???)
+6. 调试：几个核心快捷键(是否可以考虑自定义快捷键把n, c, s, u, d设置出来???)
 ```
 ctrl + /        //表示多行注释
 F8              //单步=n
@@ -74,6 +74,10 @@ auto aa = 25.0/7;   //auto类型
 ### 关于头文件
 1. c语言的头文件，一般带有h后缀名<abc.h>，比如<stdio.h>, <string.h>
    c++的头文件，一般是直接的不带后缀名<abc>, 比如<iostream>, <string>
+   在c++代码中，常用头文件包括：
+   - `<iostream>` 负责输入输出，必须配合using namespace std;
+   - `<string>` 负责新字符串
+   - `<vector>` 负责新数组
 
 2. 自定义的头文件开头必须增加如下语句：目的是防止同一个头文件因为被不同cpp文件所包含导致被重复编译而造成错误
 ```
@@ -146,6 +150,28 @@ struct Account
 };
 ```
 
+### 关于迭代器
+1. 迭代器的操作是后边vector, map这些顺序容器，关联容器操作的基础，所以必须准确掌握迭代器的通用操作。
+迭代器本质就是指针，所以操作跟指针类似。
+2. 获取迭代器
+```
+auto it = v.begin();
+auto it = v.end();
+```
+3. 操作迭代器
+```
+*it;      // 获取迭代器指向的值
+it->mem   // 等效于*it.mem，即用箭头符号代替星号+点号，获取指针指向对象的属性
+++iter;
+it + 2;
+it1 >= it2;
+it1 == it2;
+it1 != it2;
+for(auto it=v.begin();it!=v.end();++iter){}   //迭代器用！=代替<，是因为迭代器都实现了!=，但只有少部分实现<
+
+```
+
+
 ### 关于数组
 1. 使用静态数组，也就是c++默认的数组
 缺点是：必须在初始化固定长度，且不能增加长度
@@ -158,6 +184,7 @@ sizeof(a)/sizeof(*a)   // 获取数组元素个数
 2. 使用动态数组，也即是STL库里边的vector，
 优点是: 可以直接用a.size()获得长度，可存放任何别的数据类型，初始化后，可以用push_back()增加长度
 注意：如果要增加长度，就不能用在for循环，因为会导致for循环不知道循环次数
+注意：vector虽然可以下标访问，但决不能访问未初始化的值。
 ```
 #include <vector>
 vector<int> a;      //空数组
@@ -167,6 +194,11 @@ vector<int> a={1,2,3};  //甚至可以写成vector<int> a{1,2,3}; 但不过是c+
 vector<string> b = {"ab", "cd", "hello"}
 a.push_back(3)
 vector vb(va.begin()+1, va.begin()+3);   //vector切片
+
+swap(v1, v2)  // 交换两个vector
+v2.assign(v1.begin(), v1.begin()+2)//用v2的元素替换v1，但注意：不能用自己的替换自己的，因为自己的指针不能被覆盖
+
+
 ```
 
 ### 关于字符串
@@ -200,6 +232,23 @@ isupper(a)
 ```
 
 
+### 关于map和multimap
+1. 前面的容器称为顺序容器(vector/string)，而map称为关联容器，也就是key-value关联的字典，通常用来做hash表。
+2. map中关键字是唯一的，而multimap的关键字则不唯一。
+2. 关联容器的操作跟顺序容器有很多不同
+```
+map<string, int> person = {{'jack', 14},{'leo',37}};
+multimap<string,int>mperson = {{'jack',16},{'jack',25}}  // 可重名
+person.insert({key,value});
+person.begin()->first;
+person.end()->second;       // map里边每个元素是一个pair类型，pair类型可以用.first,.second提取
+person.erase(key)
+person.erase(iter)   // 迭代器操作
+person.find(key)     // 返回迭代器，他比下标访问方法好，不会增加进去 
+mperson.count(key)   // 返回个数，如果是map则只会返回0或1
+```
+
+
 ### 基本运算
 ```
 c = a + b
@@ -222,8 +271,9 @@ else{}
 while() {}
 
 for(int i=0;i<5;i++){}
-for(int &a : aa) {a *= 2}   // 类似于python更高效的写法，无需引入flag，但是c++11的特性
-
+for(auto i: data){}      // 简化的for循环写法，类似python
+for(auto& i : data){}    // 默认是不能修改源数据，采用引用则能修改
+ 
 
 switch(){
 case 0: break;
@@ -243,21 +293,21 @@ int b = (int)a;
 ### 关于引用和指针
 0. c++之所以要有引用和指针，因为c++中所有传入数据都是新建内存方式，跟原来数据无关，但c++为了强调节省内存，所以提供引用和指针避免新建内存。
 而在别的语言比如python，常规数据对象也都是不可变对象(如int/str/tuple)，却没有相应节省内存的指针引用，所以消耗内存肯定比c++大。
-*号原本是，&原本是取地址操作符
-
-1. 引用是原来变量的别名，指向同一内存地址。优点是作为函数形参从而函数体内无需创建新内存。
+下面是引用和指针的最基础用法。
 ```
-int& b = &a;
-```
-2. 指针是原来变量的地址，
-```
-int* p = &age;
+int& b = a;   // 声明时&代表创建引用
+p = &a;       // 使用时&代表获取地址
 
+int* p = &a;  // 声明时*代表创建指针
+c = *p;       // 使用时*代表获取指针指向的值
+
+c = p->empty() // 箭头符号是指针操作，等效于*p.empty()，即用箭头符号等效代替星号+点号
 ```
-3. 区别常量指针和指针常量
+
+1. 区别常量指针和指针常量
 
 
-4. 数组名和指针名完全等价，都是指针，所以既可以用数组的方式调用，也可以用指针的方式调用
+2. 数组名和指针名完全等价，都是指针，所以既可以用数组的方式调用，也可以用指针的方式调用
 ```
 
 ```
@@ -309,6 +359,74 @@ std::vector<T> copyto(std::vector<T> v, int startIndex, int count){
     return std::vector<T>(v.begin()+ startIndex, v.begine()+count);
 }
 ```
+
+### 算法中的时间复杂度和空间复杂度
+1. 时间复杂度：是指循环整个数据n的总次数，通常遍历一次为n, 嵌套遍历为O(n2)
+- O(1): 是指在固定次数的循环中就能完成，跟总个数n没有关系。
+- O(logn): 理解logn是指2为底的对数值，相当于执行了n/2/2/2/...次，也就是循环每次执行剩余一半的数据进行遍历，这比进行一轮总计n次的遍历高效一些。
+主要是在二分类型的算法中体现，比如二分搜索。
+- O(n)：就是一轮完整遍历(一个for循环)
+- O(nlogn): 就是嵌套两轮遍历，但其中一轮每次执行剩余一半数据的遍历，另一轮执行完整遍历。
+- O(n2)：就是嵌套两轮完整遍历(两个for循环)
+- O(n3)：就是嵌套三轮完整遍历(三个for循环)
+- O(2^n)：就是指数次遍历
+
+2. 通常来说O(1) < O(logn) < O(n) < O(n2) < O(n3) < O(2^n), 相当于O(n)是线性的一象限45度分割线，他下面的线是O(logn), 他上面的是O(n2)...
+
+3. 算法中最常用计算时间的方式：
+```
+#include <time.h>
+clock_t start, end;   // 定义两变量
+start = clock();
+end = clock();        // 计时
+elaps = (end - start)/CLOCK_PER_SEC;  // 计算结果
+```
+4. 算法中最常用交换2个数：
+```
+std::swap(a, b)
+```
+
+### 算法中的排序(3大核心问题之一)
+1. 用函数sort()进行排序
+2. 
+
+
+### 算法中的搜索(3大核心问题之一)
+1. 顺序搜索：也就是一个循环去搜索，通常时间复杂度为O(n)
+```
+
+```
+2. 二叉树搜索：先进行排序，然后二叉搜索(也叫二分搜索)，此时时间复杂度O(log2(n))
+```
+def search(vector<int> & nums, target){
+    snums = sorted(nums)
+    int left =0;int right=nums.size()-1;
+    while(left <= right){
+        mid = (left + right) / 2;
+        if(target == snums[mid])
+            return mid;
+        else if(target < snums[mid])
+            right = mid;
+        else if(target > snums[mid]
+            left = mid;
+}
+```
+
+
+### 算法中的动态规划方法
+1. 动态规划问题特点：为了得到结果状态，需要循环求解每个子状态，
+而递归问题的特点：为了得到结果状态，需要递归求解每个子状态，
+2. 动态规划问题思路：
+- 定义一个状态：通常就是求解结果的状态
+- 对状态进行递推，得到递推公式
+- 进行初始化，然后递推
+3. 案例：爬楼梯，贴瓷砖
+
+### 算法中的hash表空间换时间
+1. 使用hash表目的是通过存储部分数据，内存占用增多，但时间复杂度下降。
+2. 
+
+### 算法中的二叉树
 
 
 
