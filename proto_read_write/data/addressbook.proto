@@ -1,0 +1,8 @@
+syntax = "proto2";
+package lm;          //相当于命名空间
+message helloworld   //相当于结构体定义
+{
+   required int32     id = 1;  // ID
+   required string    str = 2;  // str
+   optional int32     opt = 3;  //optional field
+}

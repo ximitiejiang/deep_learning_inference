@@ -35,6 +35,8 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
+					<Add directory="/home/ubuntu/TensorRT-6.0.1.5/include"/>
+					<Add directory="/usr/local/cuda-9.0/include"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -59,6 +61,8 @@
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
+					<Add directory="/home/ubuntu/TensorRT-6.0.1.5/include"/>
+					<Add directory="/usr/local/cuda-9.0/include"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>

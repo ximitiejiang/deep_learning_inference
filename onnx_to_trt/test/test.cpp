@@ -7,20 +7,39 @@
 #include <map>
 #include <string>
 
+namespace AAA{
+    int aaa = 111;
+    void showme(){
+        std::cout << "I am showme!" << std::endl;
+    }
+}
+
+
+namespace HAPPY{
+    int alpha = 10;
+    void printme();
+}
+
+void HAPPY::printme() {
+    std::cout << "I am printme!" << std::endl;
+}
+
+
 using namespace std;
+
+using namespace HAPPY;
+using namespace AAA;
+
 int main()
 {
-    vector<int> data1 = {9, -1, 6, 0, 5, 3};
-    vector<int> data2 = {100, 300};
-    swap(data1, data2);
+    int a = 1;
+    int b = 2;
+    int c = a + b;
+    cout << double(a+b) << endl;
+    cout << (double)a+b << endl;
 
-//    data1.assign(data1.begin(), data.begin()+1);
-
-    for(auto& i : data1)
-        cout << i << " ";
-    cout << endl;
-
-    map<string, int> person = {{"leo", 12}, {"jack", 25}};
-
-
+    printme();
+    showme();
+    cout << "aaa = " << aaa << endl;
+    cout << "alpha = " << alpha << endl;
 }

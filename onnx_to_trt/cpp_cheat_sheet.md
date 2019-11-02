@@ -19,6 +19,11 @@ F7              //进入子函数=s
 shift + F8      //返回=u
 F9              //运行到断点=c
 ```
+7. 寻找关联文件：
+- c++的项目有个问题，就是include之后，头文件里边所有类/命名空间都可以随便用，所以在main文件里边，甚至不知道每个类/命名空间来自于哪个头文件。
+这跟python不同，python是可以通过import看得到module的名字，从而知道该类来自哪个module（也可以在IDE中链接过去）。
+- 在c++里边，如要知道某个类来自哪个头文件，需要用clion自带搜索快捷键(shift+shift)，可以找到每个类的原始出处。
+也可以找到每个namespace的原始出处(如果有多个namespace原始出处，则都会列出来)，非常方便。
 
 
 ### 关于CmakeLists
@@ -57,10 +62,19 @@ add_subdirectory(src)
 ```
 link_libraries(/usr/lib/xxx.so /usr/lib/xxx.so)
 ```
-6. 如果要包含头文件搜索目录，则需要增加这句
+6. 如果要包含头文件搜索目录，则需要增加这句: 注意如果不确定路径地址可以在终端用locate xxx.h把头文件所在文件夹搜索出来。
+该句功能相当于g++中-I的作用。
 ```
 include_directories(./common)
 ```
+7. 如果要自动搜索所有支持文件，则可以考虑自动搜索命令
+```
+file(GLOB Sources *.cpp)
+file(GLOB Includes *.h)
+add_executable(Cars ${Sources} ${Includes})
+```
+8. 如果要
+
 
 ### 关于c++11的新特性
 1. 如果要用c++11的新特性，需要编译时增加一句话：
@@ -72,8 +86,8 @@ auto aa = 25.0/7;   //auto类型
 ```
 
 ### 关于头文件
-1. c语言的头文件，一般带有h后缀名<abc.h>，比如<stdio.h>, <string.h>
-   c++的头文件，一般是直接的不带后缀名<abc>, 比如<iostream>, <string>
+1. c语言的头文件，一般带有h后缀名<abc.h>，比如<stdio.h>, <string.h>，
+   c++的头文件，一般是直接的不带后缀名<abc>, 比如<iostream>, <string>，
    在c++代码中，常用头文件包括：
    - `<iostream>` 负责输入输出，必须配合using namespace std;
    - `<string>` 负责新字符串
@@ -83,6 +97,7 @@ auto aa = 25.0/7;   //auto类型
 ```
 #ifndef xxx
 #define xxx
+...
 #endif
 ```
 这句也可以用一句代替：但该句在有的老编译器不支持，所以前面3句用得更多。
@@ -90,15 +105,56 @@ auto aa = 25.0/7;   //auto类型
 3. 头文件中，尽量不要包含using namespace类型语句，因为他会把这句带入所有引用他的源文件而源文件却没有意识到。
 
 
+
+### 关于名称空间
+1. 标准名称空间的应用方式为std::cout
+2. 整个名称空间导入的方式using std, 这样std下面所有名称都可以直接用，省去输入std，但可能有重名风险
+3. 部分名称空间导入的方式using std::cout，从而cout可以直接用
+4. 注意：c++中的几个核心库都是在std名称空间之下，比如：
+    - `<vector>`库: std::vector
+    - `<string>`库: std::string
+    - `<iostream>`库: std::cout
+5. 自定义名称空间：namespace abc {}
+注意：为什么要自定义名称空间，目的是防止名称冲突。常用做法是一个总的代码包定义一个总的命名空间，比如namespace cvpk{},
+从而所有自己定义的类和方法的声明都放在里边，程序员保证这个大包内部不会命名冲突而该命名空间保证这个大包不会跟外部冲突。
+6. 注意：可对比下python的做法：
+    - python在import common之后，其实相当于common就是他的命令空间，需要用common.xx来调用。也就相当于导入module集成了namespace的功能。
+    - c++在include "common.h"之后，就能直接用里边的所有模块，中间缺少命名空间的隔离，所以需要用namespace来隔离。
+    - c++代码实践时，如果只是自己用在这个项目里，不用自定义namespace也可以，但如果要打包给别人用，最好统一一个namespace。
+```
+namespace AAA     // 命名空间内可以声明变量/函数/类然后外部实现，也可以同时声明和实现，跟类的方式一样
+{
+    int aaa=10;     
+    void func(){}   
+}
+```
+
+
 ### 关于命名方式
 1. 如果是类，则首字母大写，每个单词首字母也大写：GraduateStudent，对应头文件.h和对应源码文件.cpp的名称跟类名一致
 2. 如果变量名、函数名，则首字母小写，剩下单词首字母大写
-3. 
+3. 如果是类的内部变量的命名
+例如：
+```
+class OnnxResNet(){       // 类名称：首字母大写，每个单词首字母大写
+public:
+    void processInput();  // 函数名：首字母小写，每个单词首字母大写
+}
+
+```
+
 
 
 ### 关于创建变量和常量和命名方式：
-
-1. 创建普通变量：
+1. c++的变量类型
+    - int: 4个字节(32位)，这是建议的整形数据类型
+    - long：(32位)
+    - long long：(64位)，如果int位数不够，建议用longlong而不是long，因为long一般跟int有相同尺寸
+    - float：6位有效数字(32位)，单精度
+    - double：10位有效数字(64位)，双精度，这是建议的浮点运算类型，因为float往往位数不够，而double的计算代价跟float相差无几
+    - bool: true, false
+    - char: 字符(8位)
+2. 创建普通变量：
 `int a = 1;`
 3. 创建自动推断类型变量：
 ```auto aa = 25.0/7;```
@@ -113,18 +169,25 @@ const float a=3.14   // 这种定义会在编译的时候处理，进行数据�
 #define aa 3.14      // 这种定义在预编译的时候处理，只进行纯字符串替换，不做语法检查(可能导致后期报错)
 ```
 
+### 关于变量的类型转换
+1. 赋值时bool与int会隐性转换：false/0, true/1
+```
+if(1){}; if(34){}     //都是为真
+if(0){}; if(false){}  //都是为假
+```
+2. 赋值时浮点与int会隐性转换：浮点赋值给int自动去掉小数点后(不会四舍五入)，int赋值给浮点自动加小数点后的0
+3. 计算时的自动转换：原则是尽量避免损失精度，所有低精度的会先转换成高精度的再进行计算
+```
+int a = 3.14 + 3;  // 先计算时自动转换3为double, 然后赋值给a时再转换为int
+```
+4. 强制类型转换(显式类型转换)
+```
+int a=0; int b=1;
+double c = a + b;   // 新定义一个类型达到强制转换效果
+(double)a+b;        // c语言风格的强制类型转换
+double(a+b)         // c++早期函数式强制类型转换
+```
 
-### 关于名称空间
-- 标准名称空间的应用方式为std::cout
-- 整个名称空间导入的方式using std, 这样std下面所有名称都可以直接用，省去输入std，但可能有重名风险
-- 部分名称空间导入的方式using std::cout，从而cout可以直接用
-- 自定义名称空间：namespace abc {}
-```
-namespace abc 
-{
-    int    
-}
-```
 
 ### 关于输入输出语句
 1. 如果是用c++的类型，则包含iostream，且不需要考虑类型
@@ -141,7 +204,8 @@ printf("a=%d", d)
 
 ### 关于结构体
 1. 结构体跟类的声明基本一样，唯2的两个差别：关键字不同(struct, class), 默认访问权限不同(结构体public, 类private)
-2. 结构体声明：
+2. 在很多情况下，用结构体构建一个简单模块，比用class方便，因为不区分public
+3. 结构体声明：
 ```$xslt
 struct Account
 {
@@ -378,6 +442,7 @@ std::vector<T> copyto(std::vector<T> v, int startIndex, int count){
 #include <time.h>
 clock_t start, end;   // 定义两变量
 start = clock();
+...
 end = clock();        // 计时
 elaps = (end - start)/CLOCK_PER_SEC;  // 计算结果
 ```

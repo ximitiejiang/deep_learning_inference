@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/proto_read_write.dir/writer.cpp.o  -o proto_read_write 
