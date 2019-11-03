@@ -32,11 +32,8 @@ using namespace AAA;
 
 int main()
 {
-    int a = 1;
-    int b = 2;
-    int c = a + b;
-    cout << double(a+b) << endl;
-    cout << (double)a+b << endl;
+    char str1[] = "hello";
+    char str2[] = {'h','e','l','l','o'};
 
     printme();
     showme();
