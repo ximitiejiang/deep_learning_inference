@@ -1,5 +1,7 @@
 # C++编程cheat sheet
 
+主要参考C++ Prime(第5版)，例如标记检索CP-76就代表c++ prime的第76页
+
 ### 关于clion
 1. 打开clion: 创建快捷方式
 2. 创建md文件：new/file, xxx.md直接指定后缀名即可，clion自带md预览
@@ -35,14 +37,16 @@ mkdir build
 cd build
 cmake ..       //这里两个点表示在上层文件夹下寻找cmakelists生成makefile和相关文件
 make           //执行makefile
-make install   //安装
+make install   //(optional)安装
 ```
 2. 在一个大项目下面，可以有独立的小项目，每个独立小项目都对应一个独立cmakelists：
 - 创建小项目文件夹，里边生成小项目cmakelists, cpp, .h文件
 - 右键点击任何一个cmakelists，都可以看到2个选项之一：如果已经是当前cmakelists，会看到reload cmakelists选项。
 而如果不是当前cmakelists，则会看到load cmakelists选项，点击以后就会切换到该cmakelists对应的子项目中，并且能独立运行。
 
-3.默认cmakelists包含4部分(但最简就是2句，project + add_executable)
+3.默认cmakelists包含4部分(但最简就是2句，project + add_executable).
+其中add_开头的就表示生成，add_execuable()就是生成可执行文件，add_library()就是生成静态或动态库。
+其他就是支持生成的辅助文件，比如link_libraries(),include_directories()。
 ```
 cmake_minimum_required(VERSION 3.14)   //optional, 定义cmake最低版本
 project(onnx_to_trt)                   //项目名称，默认是项目文件夹名称
@@ -236,6 +240,18 @@ for(auto it=v.begin();it!=v.end();++iter){}   //迭代器用！=代替<，是因
 ```
 
 
+### 关于初始化方式(CP-76-88-407)
+1. 接下来的数组、vector、string都会看到各种初始化方式，总结下来
+- 方式1：直接初始化，也就是用括号的形式调用对象构造函数进行初始化.
+```vector<string> vs();```
+- 方式2：拷贝初始化，也就是用=等号形式进行拷贝初始化
+```vector<string> vs = {“hello”};```
+- 方式3：列表初始化，也就是用{}的形式进行初始化
+```vector<string> vs{10, "hello"};```
+- 方式4：值初始化，也就是提供元素个数，由系统默认初始化
+```vector<string> vs(10);  //10个元素，都是空```
+
+
 ### 关于数组
 1. 使用静态数组，也就是c++默认的数组
 缺点是：必须在初始化固定长度，且不能增加长度
@@ -246,7 +262,7 @@ string a[3] = {"hello", "world", "hey"};  // 数组中可以存放任何类型�
 char a[] = {'a','b','c'}; // 字符数组初始化，不会引入\0
 char a[] = "abc";         // 一种特殊字符串初始化，此时字符串会引入\0
 
-int *p[10];   // 存放的是10个指针
+int *p[10];   // 存放的是10个指针。注意：这里下标运算优先，所以先是10个元素的的数组，然后再因为星号定义每个元素都是指针。
 int (*p)[10]; // 存放的是10个int，但数组名是指针
 int (&p)[10]; // 存放的是10个int, 但数组名是引用
 
@@ -284,6 +300,10 @@ v2.assign(v1.begin(), v1.begin()+2)//用v2的元素替换v1，但注意：不能
 ```
 char str1[] = {'a','b','c'};  // 数组的方式，长度是3
 char str2[] = "abc";          // 字符串方式，长度4，尾部带\0
+
+char *str[] = {“hello”, "world"}  // 定义的是一个指针数组，每个元素都是一个字符指针，指向的是一个字符char
+                                  // 因此即使是字符串也只是指向字符串第一个字符，但可通过指针运算访问字符串每个字符。 
+                                  // 相当于一个指针数组，每个指针元素指向一个数组的首元素
 ```
 2. 使用c++风格字符串：一般包含<string>
 优点是：可以直接获得长度a.size()和a.empty()的结果
@@ -356,7 +376,26 @@ case 1: break;
 default:
 }
 ```
+### 基本函数
+```
+#include<cmath>  // 这是c++的头文件，也可以用c的<math.h>
+ceil(x);
+floor(x);
+sqrt(x);
+sin(x);
+log(x);
+pow(x,y);  // x^y
+abs(x);    // 整数的绝对值
+fabs(x);   // 浮点数绝对值
 
+#include<cstdlib>
+srand(seed);  // 先生成随机种子，如果种子相同，就能获得相同的随机数。注意如果没有定义srand()，系统会自动固定一个seed.
+rand();       // 生成随机数
+int range[] = {0, max};
+num = rand()%(max+1);       // 获得[0,max]之间的随机数，相当于取余数
+int range[] = {min,max};
+num = rand()%(max-min) + a; // 获得[min,max]之间的随机数，本质是先获得0-delta之间随机数，然后平移。
+```
 
 ### 关于数据格式变换
 ```
@@ -426,8 +465,7 @@ void func(const int arr[]);
 void func(const int arr[10]);
 // 如果传入数组指针，为了避免指针越界有3种管理数组长度的方式：
 void func(const char str[]);                 // 利用字符串数组尾端的\0来管理数组长度
-void func(const int* begin, const int* end);
-// 利用头尾指针(建议的方法)
+void func(const int* begin, const int* end); // 利用头尾指针(建议的方法)
 void func(const int arr[], size_t size);     // 利用额外传入一个数组长度变量(以前的c/c++使用)
 ```
 
@@ -435,7 +473,7 @@ void func(const int arr[], size_t size);     // 利用额外传入一个数组�
 ```
 int main(int argc, char *argv[]) //？？？
 ```
-3. 关于扩展函数使用范围的方法
+4. 如果希望同一个函数能够适用在不同输入变量组，有如下方式：
 - 如果形参个数不同，可以用函数重载：函数名相同，但形参不同，即构成函数重载
 ```
 void func(const int*cp);
@@ -447,18 +485,65 @@ template <typename T>     // 这里定义一个模板参数T
 void func(const T* cp){}  // 
 ```
 
-4. 内联函数：可减小cpu开销而不用call，缺点是导致代码大小增加，适合一些简单函数
+5. 内联函数：可减小cpu开销而不用call，缺点是导致代码大小增加，适合一些简单函数
 ```
 inline float getPi(){
     return 3.14
 }
 ```
+6. const函数：也就是函数本身不能修改任何类的数据成员，并且也只能调用同类的const函数。
+```
+class Stack{
+    int getData() const; // 类的成员函数，且不能修改类中任何数据成员  
+}
+```
 
-### 关于智能指针
+### 关于智能指针(CP-400)
 1. 一个程序包含两种内存空间：
 - 一种是静态内存：用来保存局部static
 - 一种是栈内存
 - 一种是动态内存
+
+2. 管理动态内存有2种方式
+- 方式1：采用new,delete来创建和释放动态内存(CP-407)：
+这种方法的缺点是容易忘记delete内存从而导致该内存一致占用，也就是内存泄露。
+所以最好采用方式2智能指针来代替方式1.可以避免这种问题。
+```
+int *p = new int;     // 创建一个内存空间，未初始化
+int *p = new int();   // 创建并用了值初始化
+int *p = new int(42); // 创建并初始化
+vector<int> *pv = new vector<int>{0,1,2,3}; // 创建并列表初始化 
+const int *cp = new const int(42); // 创建const
+
+int *p = new (nothrow) int;  //默认状态new申请内存失败会报异常错误，而用这种方式则不会报错，会返回一个空指针。
+
+delete p;   // 删除指针，则释放内存
+```
+- 方式2：采用智能指针来创建和释放动态内存：
+这种方式的好处就是智能指针其实是一种对象，通过运算符重载具有指针属性(包装成一个指针)，他预先定义了在析构函数自动释放内存。
+```
+#include<memory>     // 智能指针所在头文件
+
+```
+
+2. 共享指针的使用: 
+```
+// 所有智能指针公用方法
+shared_ptr<string> p1;
+*p1; 
+p1.get();        // 获得智能指针内部真实的裸指针
+if(p1.get()){};  // 注意： 智能指针本质是对象而不是指针，所以不能直接if(p1)来判断是否为空，因为必然为true,而必须用.get()先获得裸指针再判断是否为空。        
+p1->mem;      // 获取智能指针的对象属性，等效于*p1.mem
+swap(p,q);    // 交换两个指针
+
+// 专门针对shared_pt
+shared_ptr<T> p1 = make_shared<T>(args)  // 指针指向一个对象，同时用args初始化这个对象
+p1.unique();    // 是否只有一个指针指向该对象
+p1.use_count(); // 返回指向该对象的shared_ptr个数
+
+// 专门针对unique_ptr
+
+```
 
 
 ### 关于类和对象
@@ -483,7 +568,15 @@ struct solution{       //或者用struct方式来定义一个类，则不需要�
 
 
 ### 关于模板
-1. 可以用模板方便地扩展一些基本库的功能：
+模板有2大类，一类函数模板，一类是类模板
+
+1. 函数模板: 就是通过定义模板参数T,来得到一个函数模板，能够适用于各种不同的参数T.
+```
+template<typename T>      // 先定义一个函数模板的参数T
+void add(T* p1, T* p2){}  // 然后基于模板参数来定义函数模板
+```
+
+2. 可以用模板方便地扩展一些基本库的功能：
 ```
 template<typename T>
 std::vector<T> copyto(std::vector<T> v, int startIndex, int count){

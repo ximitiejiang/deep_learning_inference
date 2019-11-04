@@ -13,17 +13,17 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
+// 定义一个字符串常量，可代表不同的项目名称：从而让这个部分跟更具有通用性。
 const std::string gSampleName = "TensorRT.sample_onnx_mnist";
 
 // 创建模型，并包含数据集
 class SampleOnnxMNIST
 {
-    template <typename T>
-    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;
+    template <typename T>  // 创建函数模板的参数T
+    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;  // 定义智能独立指针，指向
 
 public:
-    SampleOnnxMNIST(const samplesCommon::OnnxSampleParams& params)
+    SampleOnnxMNIST(const samplesCommon::OnnxSampleParams& params)      // 构造函数：空的构造函数
             : mParams(params)
             , mEngine(nullptr)
     {
@@ -40,21 +40,20 @@ public:
     bool infer();
 
 private:
-    samplesCommon::OnnxSampleParams mParams; //!< The parameters for the sample.
+    samplesCommon::OnnxSampleParams mParams; //!< The parameters for the sample.  形参
 
-    nvinfer1::Dims mInputDims;  //!< The dimensions of the input to the network.
-    nvinfer1::Dims mOutputDims; //!< The dimensions of the output to the network.
-    int mNumber{0};             //!< The number to classify
+    nvinfer1::Dims mInputDims;  //!< The dimensions of the input to the network.  输入维度
+    nvinfer1::Dims mOutputDims; //!< The dimensions of the output to the network. 输出维度
+    int mNumber{0};             //!< The number to classify                       类别数
 
-    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //!< The TensorRT engine used to run the network
+    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //!< The TensorRT engine used to run the network  定义智能指针mEngine
 
     //!
     //! \brief Parses an ONNX model for MNIST and creates a TensorRT network
     //!
     bool constructNetwork(SampleUniquePtr<nvinfer1::IBuilder>& builder,
                           SampleUniquePtr<nvinfer1::INetworkDefinition>& network, SampleUniquePtr<nvinfer1::IBuilderConfig>& config,
-                          SampleUniquePtr<nvonnxparser::IParser>& parser);
-
+                          SampleUniquePtr<nvonnxparser::IParser>& parser);       // 创建网络函数：传入对象的引用？但却是指针形式？
     //!
     //! \brief Reads the input  and stores the result in a managed buffer
     //!
