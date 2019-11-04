@@ -137,12 +137,17 @@ namespace AAA     // 命名空间内可以声明变量/函数/类然后外部实
 ### 关于命名方式
 1. 如果是类，则首字母大写，每个单词首字母也大写：GraduateStudent，对应头文件.h和对应源码文件.cpp的名称跟类名一致
 2. 如果变量名、函数名，则首字母小写，剩下单词首字母大写
-3. 如果是类的内部变量的命名
+3. 如果是类的内部变量的命名以m_类型+名称来命名，且由于变量名算第二个单词，则等同函数名命名方式即该变量名首字母大写：
+                       
 例如：
 ```
 class OnnxResNet(){       // 类名称：首字母大写，每个单词首字母大写
 public:
     void processInput();  // 函数名：首字母小写，每个单词首字母大写
+    stuName;              // 
+private:
+    int m_iAge;           // s
+    string m_sName;
 }
 
 ```
@@ -205,6 +210,44 @@ cout << "hello" << endl;
 printf("a=%d", d)
 ```
 
+### 关于文件读写
+1. c++的文件读写依靠3个对象完成
+- ofstream(str_path, mode)：用于输出到文件
+- ifstream：用于从文件读取
+- fstream：用于文件读写
+- 其中读写模式包括：
+    - ios::in
+    - ios::out
+    - ios::app (代表append从文件末尾开始读写)
+    - ios::binary (二进制)
+    - ios::trunc (打开并清除)
+    - ios::ate (代表at the end位于文件末尾)
+- 其中流对象的基本操作包括：
+```
+out.open(str);  // 打开一个文件
+out.close();   // 关闭当前文件
+out.is_open()  // 判断是否打开
+out.eof()      // 判断是否到达文件末尾end of file
+```
+2. 写入文件
+```
+ofstream out;
+out.open("test.txt");  // 创建对象和打开文件可以写成一句 ofstream out("test.txt", ios::out);
+if(out.is_open()){     // 判断是否打开
+    out<<"write success.\n";  // 写入
+    out.close();       // 关闭文件
+}
+```
+3. 读取文件
+```
+ifstream in;
+in.open("test.txt", ios::in);
+string str;
+if(in.is_open()){
+    in>>str;
+    in.close();
+}
+```
 
 ### 关于结构体
 1. 结构体跟类的声明基本一样，唯2的两个差别：关键字不同(struct, class), 默认访问权限不同(结构体public, 类private)
@@ -397,12 +440,6 @@ int range[] = {min,max};
 num = rand()%(max-min) + a; // 获得[min,max]之间的随机数，本质是先获得0-delta之间随机数，然后平移。
 ```
 
-### 关于数据格式变换
-```
-int b = (int)a;
-```
-
-
 
 ### 关于引用和指针
 0. c++之所以要有引用和指针，因为c++中所有传入数据都是新建内存方式，跟原来数据无关，但c++为了强调节省内存，所以提供引用和指针避免新建内存。
@@ -546,9 +583,8 @@ p1.use_count(); // 返回指向该对象的shared_ptr个数
 ```
 
 
-### 关于类和对象
-1. 定义类时，注意分号写法：每句最后需要分号，如果函数定义之后也需要分号，如果函数实现之后则不需要分号，
-2. 类定义的内部，可以什么都没有，默认是private模式，写成结构体struct类，则默认是public形式
+### 关于类的封装(面向对象3大特性-封装)
+1. 类与结构体的区别：只有2个区别，一个是关键字不同(struct, class)，一个是默认访问权限不同(struct默认public, 而class默认private)
 ```
 class solution{
 public:                 //为了让这个最简单类可用，至少得让函数public化，否则无法调用
@@ -563,13 +599,34 @@ struct solution{       //或者用struct方式来定义一个类，则不需要�
     }
 }
 ```
-2. 类的初始化：要么有定义构造函数，要么就必须用new
+2. 构造函数
+构造函数
+```
 
+```
+3. 访问控制：包括public, private, protect
+
+4. 友元：包括友元函数和友元类
+
+5. 类的this指针
+
+6. 类的静态成员
+
+7. 类的const函数
+
+
+### 关于类的继承(面向对象3大特性-继承)
+1. 类的继承包括public, private, protected
+
+2. 多继承与菱形继承
+
+
+## 关于类的的多态(面向对象3大特性-多态)
+1. 多态
 
 
 ### 关于模板
 模板有2大类，一类函数模板，一类是类模板
-
 1. 函数模板: 就是通过定义模板参数T,来得到一个函数模板，能够适用于各种不同的参数T.
 ```
 template<typename T>      // 先定义一个函数模板的参数T
