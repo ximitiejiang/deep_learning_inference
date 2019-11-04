@@ -250,7 +250,10 @@ int *p[10];   // 存放的是10个指针
 int (*p)[10]; // 存放的是10个int，但数组名是指针
 int (&p)[10]; // 存放的是10个int, 但数组名是引用
 
-for()
+int *be = begin(arr)    // 由于数组不是容器，没有.begin()和.end()来获得迭代器，但可以通过begin()/end()函数获得指针
+int *en = end(arr)
+
+for(d:arr){}; // 可以提取元素
 sizeof(a)/sizeof(*a)   // 获取数组元素个数
 
 ```
@@ -407,8 +410,42 @@ int func(int x, int y)
 }
 ```
 2. 形参：
+- 关键1：采用const int a, const int* p, const int& q这三种能够起到输入放大输入，且避免修改输入的效果。
+- 关键2：最优的方式是const int& q，因为可避免拷贝，可传入任何数据，不可修改输入，不影响接口。
+而采用const指针则需要修改输入接口，而采用const int a则需要额外拷贝增加内存，所以建议用const int& q为主。
 
-3. 函数重载： 函数名相同，但形参不同，即构成函数重载
+```
+// 传入指针或引用
+void func(int *p);            // 传入指针： 此时不可传入常量的地址func(&ci), 不可传入字面值常量func(32); 
+void func(int &q);            // 传入引用: 此时不可传入常量引用func(&ci), 不可传入字面值常量func(32);
+// 推荐的形参定义方式：采用引用
+void func(const int& d1, const int& d2);
+// 传入数组
+void func(const int* arr);     // 传入数组的方式有如下三种等效，都是传入数组指针
+void func(const int arr[]);
+void func(const int arr[10]);
+// 如果传入数组指针，为了避免指针越界有3种管理数组长度的方式：
+void func(const char str[]);                 // 利用字符串数组尾端的\0来管理数组长度
+void func(const int* begin, const int* end);
+// 利用头尾指针(建议的方法)
+void func(const int arr[], size_t size);     // 利用额外传入一个数组长度变量(以前的c/c++使用)
+```
+
+3. 关于main函数的形参
+```
+int main(int argc, char *argv[]) //？？？
+```
+3. 关于扩展函数使用范围的方法
+- 如果形参个数不同，可以用函数重载：函数名相同，但形参不同，即构成函数重载
+```
+void func(const int*cp);
+void func(const int*cp, const int size); // 两个函数名相同，但可以传入不同参数个数
+```
+- 如果形参类型不同，可以用函数模板：
+```
+template <typename T>     // 这里定义一个模板参数T
+void func(const T* cp){}  // 
+```
 
 4. 内联函数：可减小cpu开销而不用call，缺点是导致代码大小增加，适合一些简单函数
 ```
@@ -416,6 +453,13 @@ inline float getPi(){
     return 3.14
 }
 ```
+
+### 关于智能指针
+1. 一个程序包含两种内存空间：
+- 一种是静态内存：用来保存局部static
+- 一种是栈内存
+- 一种是动态内存
+
 
 ### 关于类和对象
 1. 定义类时，注意分号写法：每句最后需要分号，如果函数定义之后也需要分号，如果函数实现之后则不需要分号，

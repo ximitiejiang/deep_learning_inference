@@ -6,37 +6,21 @@
 #include <vector>
 #include <map>
 #include <string>
-
-namespace AAA{
-    int aaa = 111;
-    void showme(){
-        std::cout << "I am showme!" << std::endl;
-    }
-}
-
-
-namespace HAPPY{
-    int alpha = 10;
-    void printme();
-}
-
-void HAPPY::printme() {
-    std::cout << "I am printme!" << std::endl;
-}
-
-
+#include <iterator>
 using namespace std;
 
-using namespace HAPPY;
-using namespace AAA;
+template <typename T, typename U>
+U func(const T* cp, U cq){
+
+    T result = cp[1];
+    cq = cq + 1;
+    return cq;
+}
 
 int main()
 {
-    char str1[] = "hello";
-    char str2[] = {'h','e','l','l','o'};
+    int char[] = "hello";
 
-    printme();
-    showme();
-    cout << "aaa = " << aaa << endl;
-    cout << "alpha = " << alpha << endl;
+    return 0;
+
 }
