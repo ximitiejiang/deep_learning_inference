@@ -19,4 +19,8 @@ iterator
 -
 cstdlib
 -
+memory
+-
+stdio.h
+-
 
