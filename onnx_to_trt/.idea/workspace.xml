@@ -12,6 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d64266a0-c2aa-412e-9e30-d56b5cea44e3" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -24,9 +25,17 @@
       <change beforePath="$PROJECT_DIR$/cpp_cheat_sheet.md" beforeDir="false" afterPath="$PROJECT_DIR$/cpp_cheat_sheet.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../proto_read_write/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../proto_read_write/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp_cheat_sheet.md" beforeDir="false" afterPath="$PROJECT_DIR$/cpp_cheat_sheet.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/test.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/CMakeFiles/test.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/Makefile" afterDir="false" />
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
     </list>
-    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
-    <ignored path="$PROJECT_DIR$/test/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +46,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+<<<<<<< HEAD
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
@@ -136,6 +146,8 @@
       </file>
     </leaf>
   </component>
+=======
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -153,6 +165,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+<<<<<<< HEAD
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -162,6 +175,8 @@
       </list>
     </option>
   </component>
+=======
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1985" />
@@ -173,6 +188,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -192,6 +208,8 @@
       <pane id="Scope" />
     </panes>
   </component>
+=======
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -249,6 +267,7 @@
       <workItem from="1572866842234" duration="2780000" />
       <workItem from="1572878882432" duration="2530000" />
       <workItem from="1572911968971" duration="11102000" />
+<<<<<<< HEAD
       <workItem from="1573011240051" duration="18974000" />
     </task>
     <servers />
@@ -282,6 +301,12 @@
       <window_info anchor="right" id="Database" order="3" />
     </layout>
   </component>
+=======
+      <workItem from="1572962265908" duration="3474000" />
+    </task>
+    <servers />
+  </component>
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
@@ -291,12 +316,6 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
@@ -334,6 +353,7 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+<<<<<<< HEAD
   <component name="editorHistoryManager">
     <entry file="file:///usr/include/c++/5/bits/unique_ptr.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -427,4 +447,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> 42612b5c6495a5ad03f67d658d245889cb2e8d90
 </project>

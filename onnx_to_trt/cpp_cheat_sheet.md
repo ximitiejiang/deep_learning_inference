@@ -583,6 +583,7 @@ int func(int x, int y)
 // 传入指针或引用
 void func(int *p);            // 传入指针： 此时不可传入常量的地址func(&ci), 不可传入字面值常量func(32); 
 void func(int &q);            // 传入引用: 此时不可传入常量引用func(&ci), 不可传入字面值常量func(32);
+
 // 推荐的形参定义方式：采用引用
 void func(const int& d1, const int& d2);
 // 传入数组
@@ -776,19 +777,21 @@ std::swap(a, b)
 ```
 
 ```
-2. 二叉树搜索：先进行排序，然后二叉搜索(也叫二分搜索)，此时时间复杂度O(log2(n))
+2. 二分法搜索：先进行排序，然后二叉搜索(也叫二分搜索)，此时时间复杂度O(log2(n))
+- 大部分已排序的题目都是用二分法
+- 二分法的中间点求取最好用不溢出的方式
 ```
 def search(vector<int> & nums, target){
     snums = sorted(nums)
     int left =0;int right=nums.size()-1;
     while(left <= right){
-        mid = (left + right) / 2;
+        mid = left + (right - left) / 2;  // 这种获取中间值的方式不会溢出，而(left+right)/2在left,right很大时可能溢出
         if(target == snums[mid])
             return mid;
         else if(target < snums[mid])
-            right = mid;
+            right = mid - 1;
         else if(target > snums[mid]
-            left = mid;
+            left = mid + 1;
 }
 ```
 
