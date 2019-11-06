@@ -530,7 +530,6 @@ public:
     void func(){}        // 子类新的同名函数
 }
 ```
-### 语句中的
 
 
 ### 基本函数
@@ -689,7 +688,8 @@ delete p;   // 删除指针，则释放内存
 而shared_ptr会有多个指针指向同一对象，所以该指针内部会有个计数器，只有当所有指针都失效才会释放内存，从而确保不会在有指针还在用的时候就释放内存。
 ```
 #include<memory>     // 智能指针所在头文件
-unique_ptr<int> upt(new int(5));    // 通过new来初始化
+// 智能指针的类模板定义：T是指针指向的对象，D是销毁对象调用的方法，可传入自定义的删除器，也可用他的默认实现
+template <class T, class D = default_delete<T>> class unique_ptr; 
 ```
 
 2. 智能指针的使用: 
@@ -762,13 +762,38 @@ struct solution{       //或者用struct方式来定义一个类，则不需要�
 
 ### 关于模板
 模板有2大类，一类函数模板，一类是类模板
-1. 函数模板: 就是通过定义模板参数T,来得到一个函数模板，能够适用于各种不同的参数T.
+1. 函数模板: 就是通过定义函数模板参数T,来得到一个函数模板，相应的函数名就变为func<T>.
 ```
-template<typename T>      // 先定义一个函数模板的参数T
-void add(T* p1, T* p2){}  // 然后基于模板参数来定义函数模板
+template <typename T>     // 先定义一个函数模板的参数T
+void swap(T &t1, T &t2){  // 然后基于模板参数来定义函数模板： 交换两个数
+    T tmp;
+    tmp = t1;
+    t1 = t2;
+    t2 = tmp;
+}
+swap<float>(num1, num2);   // 调用函数模板
 ```
 
-2. 可以用模板方便地扩展一些基本库的功能：
+2. 类模板: 也是通过定义类模板参数T, 来得到类模板。相应的类名就变为cName<T>
+```
+template <class T>            // 先定义一个类模板的参数T
+class AAA{
+public:
+    vector<T> elem;           // 然后基于模板参数来定义类
+    void push(const T& elem)
+    void pop();
+}
+
+template <class T>                 // 每一个实现的成员函数前面都要包含类模板参数的说明
+void AAA<T>::push(const T& elem){} // 类的名称也需要变为cName<T>, 类似于vector<T>
+
+template <class T>
+void AAA<T>::pop(){}
+
+AAA<T> aaa;                        // 调用类创建对象
+```
+
+3. 可以用模板方便地扩展一些基本库的功能：
 ```
 template<typename T>
 std::vector<T> copyto(std::vector<T> v, int startIndex, int count){
