@@ -1,4 +1,10 @@
-// 该代码来自nvidia tensorRT教程
+// 该代码来自nvidia tensorRT教程: sampleOnnxMNIST
+// 准备工作：
+//1. 需要事先下载mnist数据集。
+//2. 需要根据TensorRT_root/data/mnist文件夹中readme.md说明的，先运行在generate_pgms.py文件，把前面下载的mnist数据集(先解压缩)的train.xx, labels.xx转换为0-9的pgm文件。
+//   这10张pgm文件是帮我们生成的28*28的图片文件，用于输入model进行inference。 但需要注意运行generate_pgms.py时需要手动再去设置一下数据集路径和文件名，源文件的默认文件名有错。
+//3. 进入sample具体的项目文件夹，然后make，对应bin文件会放到../bin文件夹中。
+//4. 进入bin文件夹质执行可执行文件./sample_onnx_mnist即可看到预测结果。
 
 #include "argsParser.h"
 #include "buffers.h"
@@ -19,8 +25,8 @@ const std::string gSampleName = "TensorRT.sample_onnx_mnist";
 // 创建模型，并包含数据集
 class SampleOnnxMNIST
 {
-    template <typename T>  // 创建函数模板的参数T
-    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;  // 定义智能独立指针，指向
+    template <typename T>  // 创建函数模板的参数T，并使用在智能指针上
+    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;  // 定义智能独立指针
 
 public:
     SampleOnnxMNIST(const samplesCommon::OnnxSampleParams& params)      // 构造函数：空的构造函数
@@ -40,20 +46,20 @@ public:
     bool infer();
 
 private:
-    samplesCommon::OnnxSampleParams mParams; //!< The parameters for the sample.  形参
+    samplesCommon::OnnxSampleParams mParams; //!< The parameters for the sample.  这里是从命名空间samplesCommon中定义了一个结构体参数OnnxSampleParams
 
-    nvinfer1::Dims mInputDims;  //!< The dimensions of the input to the network.  输入维度
-    nvinfer1::Dims mOutputDims; //!< The dimensions of the output to the network. 输出维度
-    int mNumber{0};             //!< The number to classify                       类别数
+    nvinfer1::Dims mInputDims;  //!< The dimensions of the input to the network.  一个类，定义输入维度
+    nvinfer1::Dims mOutputDims; //!< The dimensions of the output to the network. 一个类，定义输出维度
+    int mNumber{0};             //!< The number to classify                       变量，类别数
 
-    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //!< The TensorRT engine used to run the network  定义智能指针mEngine
+    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //!< The TensorRT engine used to run the network  指针，engnie
 
     //!
     //! \brief Parses an ONNX model for MNIST and creates a TensorRT network
     //!
-    bool constructNetwork(SampleUniquePtr<nvinfer1::IBuilder>& builder,
+    bool constructNetwork(SampleUniquePtr<nvinfer1::IBuilder>& builder,    // 函数，创建network
                           SampleUniquePtr<nvinfer1::INetworkDefinition>& network, SampleUniquePtr<nvinfer1::IBuilderConfig>& config,
-                          SampleUniquePtr<nvonnxparser::IParser>& parser);       // 创建网络函数：传入对象的引用？但却是指针形式？
+                          SampleUniquePtr<nvonnxparser::IParser>& parser);
     //!
     //! \brief Reads the input  and stores the result in a managed buffer
     //!
@@ -345,10 +351,4 @@ int main(int argc, char** argv)
     }
 
     return gLogger.reportPass(sampleTest);
-}
-
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
 }
