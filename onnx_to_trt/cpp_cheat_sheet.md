@@ -503,6 +503,36 @@ case 1: break;
 default:
 }
 ```
+### 语句中的typedef
+1. 唯一功能就是用来定义别名
+```
+
+```
+
+### 语句中的using
+1. using可以用来定义命名空间
+```
+using namespace std;
+using namespace algorithm;
+```
+2. using可以用来给模板定义一个别名：
+这种方式类似于typedef的作用，但比typedef的写法更容易看懂，并且
+```
+template <typename T>;
+using new_vec = MyVector<T, >;    // 定义一个模板的别名，创建模板变量时就能简洁很多。    
+new_vec<int> vec;                 // 创建了一个模板变量
+```
+3. using还可以用来在子类中继承父类的方法
+```
+class Child : public Base{
+public:
+    using Base::func;    // 利用using继承父类的同名函数，这样就避免父类同名函数被子类同名函数所覆盖
+    void func(){}        // 子类新的同名函数
+}
+```
+### 语句中的
+
+
 ### 基本函数
 ```
 #include<cmath>  // 这是c++的头文件，也可以用c的<math.h>
@@ -609,7 +639,13 @@ void func(const int*cp, const int size); // 两个函数名相同，但可以传
 - 如果形参类型不同，可以用函数模板：
 ```
 template <typename T>     // 这里定义一个模板参数T
-void func(const T* cp){}  // 
+void swap(T &t1, T &t2){  // 然后实现基于模板参数的函数模板： 交换两个数
+    T tmp;
+    tmp = t1;
+    t1 = t2;
+    t2 = tmp;
+}
+swap<float>(num1, num2);   // 调用函数模板
 ```
 
 5. 内联函数：可减小cpu开销而不用call，缺点是导致代码大小增加，适合一些简单函数
