@@ -116,13 +116,15 @@ auto aa = 25.0/7;   //auto类型
 
 
 ### 关于名称空间
-1. 标准名称空间的应用方式为std::cout
-2. 整个名称空间导入的方式using std, 这样std下面所有名称都可以直接用，省去输入std，但可能有重名风险
-3. 部分名称空间导入的方式using std::cout，从而cout可以直接用
-4. 注意：c++中的几个核心库都是在std名称空间之下，比如：
-    - `<vector>`库: std::vector
-    - `<string>`库: std::string
-    - `<iostream>`库: std::cout
+1. 标准名称空间的应用方式如果不声明，就可以直接用
+`std::cout; std::vector<int>;`
+2. 整个名称空间所有对象都导入的方式using namespace std, 这样std下面所有名称都可以直接用，省去输入std，但可能有重名风险
+3. 部分名称空间导入的方式using std::cout，从而cout可以直接用。
+```
+using namespace std;   // 声明命名空间名称，要带关键字namespace
+using std::vector;     // 声明命名空间下面的子对象，不要带关键字namespace
+```
+4. 注意：c++中的标准库都是在std名称空间之下，比如：vector, string...
 5. 自定义名称空间：namespace abc {}
 注意：为什么要自定义名称空间，目的是防止名称冲突。常用做法是一个总的代码包定义一个总的命名空间，比如namespace cvpk{},
 从而所有自己定义的类和方法的声明都放在里边，程序员保证这个大包内部不会命名冲突而该命名空间保证这个大包不会跟外部冲突。
@@ -136,6 +138,8 @@ namespace AAA     // 命名空间内可以声明变量/函数/类然后外部实
     int aaa=10;     
     void func(){}   
 }
+
+using namespace AAA;
 ```
 
 
@@ -339,10 +343,10 @@ struct Account
 };
 ```
 
-### 关于迭代器
+### 关于迭代器(CP-95)
 1. 迭代器的操作是后边vector, map这些顺序容器，关联容器操作的基础，所以必须准确掌握迭代器的通用操作。
-迭代器本质就是指针，所以操作跟指针类似。
-2. 获取迭代器
+迭代器跟指针相似但并不完全是指针，但操作跟指针基本一致。
+2. 获取迭代器，最常用的类型是用auto，因为迭代器类型一般比较长，比如vector<int>::iterator类型，
 ```
 auto it = v.begin();
 auto it = v.end();
@@ -514,11 +518,16 @@ case 1: break;
 default:
 }
 ```
-### 语句中的typedef
-1. 唯一功能就是用来定义别名
+### 语句中类型别名定义：typedef/using
+1. 定义类型别名目的是让某些非常长的类型更简洁，容易理解，有2种方法可以定义：
+```
+typedef vector<string> vs;   // 早期最常见的用法
+vs  a1(2, "hello");
+
+using vs = vector<string>;   // using在c++新标准中也可以用来定义类型别名，并且更加容易理解，也更多被人使用
+vs a1{"hello","hello"}
 ```
 
-```
 
 ### 语句中的using
 1. using可以用来定义命名空间
@@ -672,10 +681,10 @@ class Stack{
 ```
 ### 关于用new/delete管理动态内存(CP-407-423)
 1. 数据在内存中存放地址有4种
-       - 正文段：存放机器指令，为只读，不可修改
-       - 数据段：存放静态变量(static)
-       - 栈区：存放自动局部变量(普通变量)
-       - 堆区：存放动态内存分配(new/delete)
+   - 正文段：存放机器指令，为只读，不可修改
+   - 数据段：存放静态变量(static)
+   - 栈区：存放自动局部变量(普通变量)
+   - 堆区：存放动态内存分配(new/delete)
 
 2. 管理动态内存有2种方式： 
     - new/delete方式: 这种方法的缺点是容易忘记写delete p，或者因为前面语句报异常而没有执行delete p语句，
