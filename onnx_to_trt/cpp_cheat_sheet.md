@@ -414,22 +414,28 @@ for(d:arr){};           // 可以提取元素
 sizeof(a)/sizeof(*a)   // 获取数组元素个数
 
 ```
-2. 使用动态数组，也即是STL库里边的vector，
+2. 使用动态数组，也即是STL库里边的vector，他是顺序容器的代表(CP-292)
 优点是: 可以直接用a.size()获得长度，可存放任何别的数据类型，初始化后，可以用push_back()增加长度
 注意：如果要增加长度，就不能用在for循环，因为会导致for循环不知道循环次数
 注意：vector虽然可以下标访问，但决不能访问未初始化的值。
 ```
 #include <vector>
+// 初始化
 vector<int> a;      //空数组
 vector<int> a(10);
 vector<int> a(10, 3);  
 vector<int> a={1,2,3};  //甚至可以写成vector<int> a{1,2,3}; 但不过是c++11的特性
 vector<string> b = {"ab", "cd", "hello"}
-a.push_back(3)
-vector vb(va.begin()+1, va.begin()+3);   //vector切片
-
-swap(v1, v2)  // 交换两个vector
-v2.assign(v1.begin(), v1.begin()+2)//用v2的元素替换v1，但注意：不能用自己的替换自己的，因为自己的指针不能被覆盖
+// 基本操作
+a.push_back(3)                           //末尾插入元素
+vector v2(v1.begin()+1, v1.begin()+3);   //切片
+v2.assign(v1.begin(), v1.begin()+2)      //切片2：用v2的元素替换v1，但注意：不能用自己的替换自己的，因为自己的指针不能被覆盖
+// 相关函数操作
+swap(v1, v2)  //交换两个vector
+v1.at(ind);  // 某位置元素
+v1.front();  // 首位置元素
+v1.back();   // 尾位置元素
+v1[ind];     // 某位置元素
 
 ```
 
@@ -584,6 +590,8 @@ p = &a;       // 使用时&代表获取地址
 
 int* p = &a;  // 声明时*代表创建指针，注意指针也是对象，所以指针指向的对象能够再改变。
 c = *p;       // 使用时*代表获取指针指向的值
+int *p = new int()  // 创建指针最快的方式是new，因为new能够直接返回地址，而不需要先新建对象然后取地址。
+delete p; p = nullptr; // 但用new创建的动态内存需要手动删除，防止内存泄露。
 
 c = p->empty() // 箭头符号是指针操作，等效于*p.empty()，即用箭头符号等效代替星号+点号
 ```
@@ -703,8 +711,6 @@ string *sp = new string;                     // 默认初始化
 string *sp = new string(3, "hello");         // 直接初始化
 vector<int> *vp = new vector<int>{1,2,3};    // 列表初始化
 ```
-
-
 
 ### 关于用智能指针管理动态内存(CP-400)
 
