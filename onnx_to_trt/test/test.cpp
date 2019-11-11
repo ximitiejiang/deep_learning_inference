@@ -37,33 +37,35 @@ private:
 
 };
 
+class Base{
+public:
+    int a1 = 0;
+private:
+    int a2 = 1;
+protected:
+    int a3 = 3;
+};
+
+class Drive : public Base{
+public:
+    void print(){
+        std::cout << a1 << " ";
+//        std::cout << a2 << " "; // 派生类不可访问private
+        std::cout << a3 << " ";  // 派生类内可访问protected
+    }
+};
 
 int main()
 {
-//    // 数组的创建和初始化，输出合理，是指针地址
-//    int arr1[] =  {1,2,3};
-//    int *arr2 = arr1;
-//    std::cout << arr1 << std::endl;
-//    std::cout << arr2 << std::endl;
-    int *p1 = ;
+    Base b;
+    Drive d;
+    d.print();
+    b.a1;
+//    b.a2;  // 类外不可访问private
+//    b.a3;  // 类外不可访问protected
+    std::cout << d.a1;  // 派生类外
+    std::cout << d.a3;
 
-    // 字符串
-    char *p0 = "abc";      // p0是一个指针，相当于P0[4]
-    printf("p0 address: %d", p0);  //p0
-
-    std::cout << p0 << std::endl;
-    std::cout << p0[1] << std::endl;
-
-    char *str[3] = {"hello", "world", "lake"};
-    std::cout << str[2];    //用字符指针输出：居然就是字符串
-
-    char str0;
-
-    std::cin >> str0;
-    std::cout << "this is str0 input: " << str0 << std::endl;
-
-    int *ip[5];
-//    int (*ipp)[5] = {1,2,3,4,5};
 
     return 0;
 
