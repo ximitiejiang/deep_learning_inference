@@ -26,7 +26,7 @@ const std::string gSampleName = "TensorRT.sample_onnx_mnist";
 class SampleOnnxMNIST
 {
     template <typename T>  // 创建函数模板的参数T，并使用在智能指针上
-    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;  // 定义智能独立指针
+    using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;  // 定义智能独立指针的别名SampleUniquePtr，同时自定义了unique_ptr里边允许使用的删除指针类inferDeleter
 
 public:
     SampleOnnxMNIST(const samplesCommon::OnnxSampleParams& params)      // 构造函数：空的构造函数
@@ -58,7 +58,8 @@ private:
     //! \brief Parses an ONNX model for MNIST and creates a TensorRT network
     //!
     bool constructNetwork(SampleUniquePtr<nvinfer1::IBuilder>& builder,    // 函数，创建network
-                          SampleUniquePtr<nvinfer1::INetworkDefinition>& network, SampleUniquePtr<nvinfer1::IBuilderConfig>& config,
+                          SampleUniquePtr<nvinfer1::INetworkDefinition>& network,
+                          SampleUniquePtr<nvinfer1::IBuilderConfig>& config,
                           SampleUniquePtr<nvonnxparser::IParser>& parser);
     //!
     //! \brief Reads the input  and stores the result in a managed buffer
