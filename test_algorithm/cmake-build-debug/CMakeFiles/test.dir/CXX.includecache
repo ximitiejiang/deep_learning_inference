@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././algorithms/link_list.h
+node.h
+.././algorithms/node.h
+
+.././algorithms/node.h
+map
+-
+
+.././algorithms/queue.h
+
+.././algorithms/tree.h
+vector
+-
+iostream
+-
+
+.././utils/arg_parse.h
+string
+-
+getopt.h
+-
+
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/main.cpp
+iostream
+-
+queue.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/queue.h
+node.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/node.h
+link_list.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/link_list.h
+tree.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/tree.h
+arg_parse.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/arg_parse.h
+

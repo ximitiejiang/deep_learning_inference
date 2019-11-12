@@ -282,7 +282,7 @@ bool SampleOnnxMNIST::verifyOutput(const samplesCommon::BufferManager& buffers)
 //!
 //! \brief Initializes members of the params struct using the command line args
 //!
-samplesCommon::OnnxSampleParams initializeSampleParams(const samplesCommon::Args& args)
+samplesCommon::OnnxSampleParams initializeSampleParams(const samplesCommon::Args& args) // 初始化params的函数，返回Params类的类型
 {
     samplesCommon::OnnxSampleParams params;
     if (args.dataDirs.empty()) //!< Use default directories if user hasn't provided directory paths
@@ -334,7 +334,7 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    auto sampleTest = gLogger.defineTest(gSampleName, argc, argv);
+    auto sampleTest = gLogger.defineTest(gSampleName, argc, argv); // gSampleName是代表这个项目的名字
 
     gLogger.reportTestStart(sampleTest);
 
