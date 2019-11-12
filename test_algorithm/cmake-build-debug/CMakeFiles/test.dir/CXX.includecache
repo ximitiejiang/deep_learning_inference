@@ -28,6 +28,10 @@ string
 getopt.h
 -
 
+.././utils/test_class.h
+arg_parse.h
+.././utils/arg_parse.h
+
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/main.cpp
 iostream
 -
@@ -41,4 +45,6 @@ tree.h
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/tree.h
 arg_parse.h
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/arg_parse.h
+test_class.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/test_class.h
 

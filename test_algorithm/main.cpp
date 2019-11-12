@@ -8,6 +8,7 @@
 #include "link_list.h"
 #include "tree.h"
 #include "arg_parse.h"
+#include "vector_op.h"
 #include "test_class.h"
 
 using namespace std;
@@ -47,6 +48,10 @@ void testLinkList(){
     p->insert(1, &n4);
     // 遍历node
     p->traverse();
+    cout << endl;
+    // 逆序操作
+    p->reverse();
+    p->traverse();
 
     delete p;
     p = nullptr;
@@ -62,16 +67,18 @@ void testListTree(){
 
 
 int main(int argc, char *argv[]){
-    Args args; // 初始化一个参数结构体
-    sParams sp;
+//    Args args; // 初始化一个参数结构体
+//    sParams sp;
+    vector<int> nums{01,2,3,4,5,6}; int target = 4;
+    int result = searchInsertPosition(nums, target);
+    cout << result << endl;
 
 
-
-    //    bool argOK = argParser(args, argc, argv);
+//    bool argOK = argParser(args, argc, argv);
 //    cout << args.model_dir << endl;
 //    cout << args.dataset_dir << endl;
 
-//    testLinkList();
+    testLinkList();
 
 
     cout << "finished!" << endl;

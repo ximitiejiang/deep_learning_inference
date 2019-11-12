@@ -54,6 +54,8 @@ LinkList::~LinkList(){
     mHead = nullptr;
 }
 
+
+// 链表的插入：先定义临时节点循环移动到目标位置，然后用新节点桥接前后节点。
 bool LinkList::insert(int index, Node *node){
     if(index < 0 || index > mLen)  // 确保位置
         return false;
@@ -78,6 +80,7 @@ bool LinkList::pop(int index, Node *node) {
     return true;
 }
 
+// 链表遍历：就是定义一个指针，然后让这个指针沿着链表方向移动到最后
 void LinkList::traverse() {
     Node *tmpNode = mHead->next;
     for(int i=0; i < mLen; i++) {
@@ -106,8 +109,9 @@ void LinkList::clear(){
     mHead->next = nullptr;
 }
 
-// 反转链表：如果只是简单取出每一个放在另一个新的list里边，那么空间O(n)，但如果要求空间复杂度O(1),那么就需要动态移动节点。
-// 如下：就是按顺序把后边每一个元素轮流换到第二个node的位置，zeroNode位置保持不变
+// 反转链表(LC-)：如果只是简单取出每一个放在另一个新的list里边，那么空间O(n)，但如果要求空间复杂度O(1),那么就需要动态移动节点。
+// 反转算法1：就是按顺序把后边每一个元素轮流换到head和第一个node之间，也就是把q,t断开，然后q移动到head,p之间。
+// 其中关键是定义p,q,t三个指针，head跟p一组，q跟t一组。
 void LinkList::reverse(){
     Node *p = mHead->next;
     Node *q = mHead->next->next;
