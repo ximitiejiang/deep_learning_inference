@@ -54,6 +54,13 @@ project(onnx_to_trt)                   //项目名称，默认是项目文件夹
 set(CMAKE_CXX_STANDARD 14)             //optional, 设置c++14为标准
 add_executable(onnx_to_trt main.cpp)   //定义生成的可执行文件名和支持文件
 ```
+4. 设置变量和引用变量
+```
+set(tensorRT_path "/usr/tensorRT/")   // 这是创建变量tensorRT_path
+file(GLOB Sources *.cpp)              // 这也是创建变量Sources
+${tensorRT_path}                      // 这是引用变量  
+```
+
 3. 如果要增加c++11的相关特性，比如nullptr，则增加该句，放在add_executable()前面：
 ```
 add_definitions(-std=c++11)
@@ -78,9 +85,20 @@ file(GLOB Sources *.cpp)
 file(GLOB Includes *.h)
 add_executable(Cars ${Sources} ${Includes})
 ```
-8. 如果
+8. 如果要依赖某个已经安装的包，则可以用寻找包命令
+```
+find_package(CUDA)
+```
+9. 如果要生成动态或者静态链接库，则采用添加
+```
+add_library(algorithms SHARED ${src_path})  // 创建动态链接库：库名称libalgorithms, SHARED表示为.so动态链接库，src_path是.cpp文件所在路径
+```
+10. 如果要安装生成的头文件和库文件
+```
+install()  // 安装头文件和库文件
+```
 
-9. 一个cmakelist参考：https://github.com/dusty-nv/jetson-inference/blob/master/docs/imagenet-example-2.md
+11. 一个cmakelist参考：https://github.com/dusty-nv/jetson-inference/blob/master/docs/imagenet-example-2.md
 这是一个jetson nano进行tensorrt 模型的模板：
 ```
 # require CMake 2.8 or greater
