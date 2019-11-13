@@ -322,6 +322,10 @@ int main(int argc, char** argv)
 {
     samplesCommon::Args args;
     bool argsOK = samplesCommon::parseArgs(args, argc, argv);
+    // 手动加入参数: args结构体
+    args.dataDirs.push_back("/home/ubuntu/TensorRT-6.0.1.5/data/mnist");  //数据集地址
+
+
     if (!argsOK)
     {
         gLogError << "Invalid arguments" << std::endl;
@@ -334,11 +338,11 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
-    auto sampleTest = gLogger.defineTest(gSampleName, argc, argv); // gSampleName是代表这个项目的名字
+    auto sampleTest = gLogger.defineTest(gSampleName, argc, argv); // gSampleName是const tring代表这个项目的名字，主要是放入gLogger的testAtom中存放测试的名字等
 
-    gLogger.reportTestStart(sampleTest);
+    gLogger.reportTestStart(sampleTest);   // 输出测试汇总信息
 
-    SampleOnnxMNIST sample(initializeSampleParams(args));
+    SampleOnnxMNIST sample(initializeSampleParams(args));  // 定义一个sample对象，接收initializeSampleParams()返回的params结构体
 
     gLogInfo << "Building and running a GPU inference engine for Onnx MNIST" << std::endl;
 

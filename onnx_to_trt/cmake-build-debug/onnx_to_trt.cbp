@@ -27,8 +27,8 @@
 					<DistClean command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="onnx_to_trt">
-				<Option output="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/onnx_to_trt" prefix_auto="0" extension_auto="0"/>
+			<Target title="onnx_mnist">
+				<Option output="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/onnx_mnist" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -47,14 +47,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 onnx_to_trt"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 onnx_mnist"/>
 					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="onnx_to_trt/fast">
-				<Option output="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/onnx_to_trt" prefix_auto="0" extension_auto="0"/>
+			<Target title="onnx_mnist/fast">
+				<Option output="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/onnx_mnist" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -73,7 +73,7 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 onnx_to_trt/fast"/>
+					<Build command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 onnx_mnist/fast"/>
 					<CompileFile command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j12 -f &quot;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -91,7 +91,7 @@
 			</Target>
 		</Build>
 		<Unit filename="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/main.cpp">
-			<Option target="onnx_to_trt"/>
+			<Option target="onnx_mnist"/>
 		</Unit>
 		<Unit filename="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

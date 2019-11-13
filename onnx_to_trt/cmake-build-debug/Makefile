@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named onnx_to_trt
+# Target rules for targets named onnx_mnist
 
 # Build rule for target.
-onnx_to_trt: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 onnx_to_trt
-.PHONY : onnx_to_trt
+onnx_mnist: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 onnx_mnist
+.PHONY : onnx_mnist
 
 # fast build rule for target.
-onnx_to_trt/fast:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/build
-.PHONY : onnx_to_trt/fast
+onnx_mnist/fast:
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/build
+.PHONY : onnx_mnist/fast
 
 main.o: main.cpp.o
 
@@ -129,7 +129,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -138,7 +138,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -147,7 +147,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -157,7 +157,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... onnx_to_trt"
+	@echo "... onnx_mnist"
 	@echo "... edit_cache"
 	@echo "... main.o"
 	@echo "... main.i"

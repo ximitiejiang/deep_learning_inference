@@ -65,39 +65,39 @@ CMAKE_SOURCE_DIR = /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt
 CMAKE_BINARY_DIR = /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug
 
 #=============================================================================
-# Target rules for target CMakeFiles/onnx_to_trt.dir
+# Target rules for target CMakeFiles/onnx_mnist.dir
 
 # All Build rule for target.
-CMakeFiles/onnx_to_trt.dir/all:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/depend
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target onnx_to_trt"
-.PHONY : CMakeFiles/onnx_to_trt.dir/all
+CMakeFiles/onnx_mnist.dir/all:
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/depend
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target onnx_mnist"
+.PHONY : CMakeFiles/onnx_mnist.dir/all
 
 # Include target in all.
-all: CMakeFiles/onnx_to_trt.dir/all
+all: CMakeFiles/onnx_mnist.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/onnx_to_trt.dir/rule: cmake_check_build_system
+CMakeFiles/onnx_mnist.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/onnx_to_trt.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/onnx_mnist.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/onnx_to_trt.dir/rule
+.PHONY : CMakeFiles/onnx_mnist.dir/rule
 
 # Convenience name for target.
-onnx_to_trt: CMakeFiles/onnx_to_trt.dir/rule
+onnx_mnist: CMakeFiles/onnx_mnist.dir/rule
 
-.PHONY : onnx_to_trt
-
-# clean rule for target.
-CMakeFiles/onnx_to_trt.dir/clean:
-	$(MAKE) -f CMakeFiles/onnx_to_trt.dir/build.make CMakeFiles/onnx_to_trt.dir/clean
-.PHONY : CMakeFiles/onnx_to_trt.dir/clean
+.PHONY : onnx_mnist
 
 # clean rule for target.
-clean: CMakeFiles/onnx_to_trt.dir/clean
+CMakeFiles/onnx_mnist.dir/clean:
+	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/clean
+.PHONY : CMakeFiles/onnx_mnist.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/onnx_mnist.dir/clean
 
 .PHONY : clean
 

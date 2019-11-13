@@ -4,4 +4,7 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(../common)
 include_directories(/home/ubuntu/TensorRT-6.0.1.5/include)
 include_directories(/usr/local/cuda-9.0/include)
-add_executable(onnx_to_trt main.cpp)
+
+file(GLOB Sources *.cpp)
+file(GLOB Includes *.h)
+add_executable(onnx_mnist ${Sources} ${Includes})

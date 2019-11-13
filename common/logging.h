@@ -321,7 +321,7 @@ public:
     //
     //! \return a TestAtom that can be used in Logger::reportTest{Start,End}().
     //!
-    static TestAtom defineTest(const std::string& name, const std::string& cmdline)
+    static TestAtom defineTest(const std::string& name, const std::string& cmdline) // defineTest()函数返回一个TestAtom对象，主要用于参访started标记、名称、命令行参数
     {
         return TestAtom(false, name, cmdline);
     }
