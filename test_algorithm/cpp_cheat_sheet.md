@@ -29,16 +29,24 @@ F9              //运行到断点=c
 也可以找到每个namespace的原始出处(如果有多个namespace原始出处，则都会列出来)，非常方便。
 
 
+### 关于tensorRT
+1. 安装c++版本的tensorRT:
+2. 
+
+
 ### 关于CmakeLists
 1. cmakelists的功能，就是自动生成makefile，如果有cmakelists，则编译过程就是如下：
 这是典型out_source方式，也就是外部搜索，然后生成文件到当前指定文件夹下，避免大量文件干扰代码目录。
-而在clion中则不需要考虑out_source，他会自动把根目录下cmakelists生成的makefile等文件放入一个cmake-build-debug文件夹中
+而在clion中则不需要考虑out_source，他会自动把根目录下cmakelists生成的makefile等文件放入一个cmake-build-debug文件夹中.
+注意：cmakelists的指令与大小写无关，但参数和变量名都是大小写相关的。通常推荐都用大写
 ```
 mkdir build
 cd build
-cmake ..       //这里两个点表示在上层文件夹下寻找cmakelists生成makefile和相关文件
+cmake ..       //或者cmake.这里两个点表示在上层文件夹下寻找cmakelists生成makefile和相关文件
 make           //执行makefile
 make install   //(optional)安装
+
+make clean     // 清理工程
 ```
 2. 在一个大项目下面，可以有独立的小项目，每个独立小项目都对应一个独立cmakelists：
 - 创建小项目文件夹，里边生成小项目cmakelists, cpp, .h文件
@@ -47,56 +55,180 @@ make install   //(optional)安装
 
 3.默认cmakelists包含4部分(但最简就是2句，project + add_executable).
 其中add_开头的就表示生成，add_execuable()就是生成可执行文件，add_library()就是生成静态或动态库。
-其他就是支持生成的辅助文件，比如link_libraries(),include_directories()。
+其他就是支持用的的辅助文件，比如link_libraries(),include_directories()。
 ```
 cmake_minimum_required(VERSION 3.14)   //optional, 定义cmake最低版本
 project(onnx_to_trt)                   //项目名称，默认是项目文件夹名称
 set(CMAKE_CXX_STANDARD 14)             //optional, 设置c++14为标准
 add_executable(onnx_to_trt main.cpp)   //定义生成的可执行文件名和支持文件
 ```
-4. 设置变量和引用变量
+
+3. project()创建项目: 采用project(name)指令
+指令之后会得到name_BINARY_DIR(指向编译路径，比如build文件夹)和name_SOURCE_DIR(指向项目路径)
+同时得到PROJECT_BINARY_DIR和PROJECT_SOURCE_DIR两个变量，跟前面两个变量相同，所以为了以后改项目名不用改cmakelists，尽可能用后边这两个变量。
+```
+project(test)
+```
+4. set()设置变量和引用变量，以及常用系统变量
 ```
 set(tensorRT_path "/usr/tensorRT/")   // 这是创建变量tensorRT_path
 file(GLOB Sources *.cpp)              // 这也是创建变量Sources
 ${tensorRT_path}                      // 这是引用变量  
+if tensorRT_path                      // 注意只有在if后边引用变量时不需要${}
+
+// 常用系统变量
+${PROJECT_SOURCE_DIR}     // 指向项目路径，也就是src路径，如果没有就是项目路径
+${PROJECT_BINSARY_DIR}    // 指向编译路径，也就是build文件夹，如果没有则默认跟项目路径相同
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINSARY_DIR}/bin)   // 修改常用系统变量路径EXECUTABLE_OUTPUT_PATH，也就是可执行文件输出路径
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)       // 修改常用系统变量路径LIBRARY_OUTPUT_PATH，也就是库文件输出路径
+set(CMAKE_INSTALL_PREFFIX=/usr)                          // 修改cmake安装的默认前缀路径，默认是/usr/local，也就是默认是针对本用户/usr/local，可以改为针对所有用户/usr 
 ```
 
-3. 如果要增加c++11的相关特性，比如nullptr，则增加该句，放在add_executable()前面：
+3. add_difinitions()用于增加编译选项，本质上就是cmake指令的-D选项
+- 如果要增加c++11的相关特性，比如nullptr，则增加该句，放在add_executable()前面：
 ```
 add_definitions(-std=c++11)
 ```
+
 4. 如果要单独一个src子文件夹放置.cpp和.h文件，则需要在根路径的cmakelists增加这句，同时src文件夹下增加额外cmakelists文件。
 参考Teris源码。此时，主目录下的cmakelists主要用来包含src文件夹，并没有生成可执行文件，而src里边的cmakelists则会有生成可执行文件。
 ```
 add_subdirectory(src)
 ```
-5. 如果要包含.so库文件，则需要增加这句：
-```
-link_libraries(/usr/lib/xxx.so /usr/lib/xxx.so)
-```
-6. 如果要包含头文件搜索目录，则需要增加这句: 注意如果不确定路径地址可以在终端用locate xxx.h把头文件所在文件夹搜索出来。
-该句功能相当于g++中-I的作用。
+
+6. include_directories()添加头文件路径，则需要增加这句: 注意如果不确定路径地址可以在终端用locate xxx.h把头文件所在文件夹搜索出来。该句功能相当于g++中-I的作用。
+- 有两个语句都可以实现添加头文件路径，一个是include_directories()这是需要放在生成可执行文件之前。
+  另一个是target_include_directories()这是需要放在在生成可执行文件之后。
 ```
 include_directories(./common)
+target_include_directories(main ./common)
 ```
-7. 如果要自动搜索所有支持文件，则可以考虑自动搜索命令
+
+5. link_libraries()添加.so动态库文件路径，则需要增加这句：
+- 实测发现默认的.so路径只有一个/usr/lib，也就是库文件如果在这个路径下则不需要欧手动链接。
+但如果不是在这个路径下，或者是在这个路径下的文件夹中，则需要手动链接，即添加link_libraries("lib_path.so")
+- 有两个语句都可以实现链接库文件，一个是link_libraries(path)这是在生成可执行文件之前就指定库文件路径(必须放在add_executable()的前边)。
+  另一个语句也可以实现链接库文件，即用target_link_libraries(main path)这是在生成target可执行文件之后链接(必须放在add_executable()的后边)
+  两者的区别就是在定义链接文件时实在可执行文件生成之前还是之后，都可以实现功能。
+```
+link_libraries(/usr/lib/docum/xxx.so /usr/local/lib/xxx.so)  // 是在可执行文件main生成之前链接，所以不需要提供可执行文件名，语句要在add_executable()之前
+
+target_link_libraries(main /usr/lib/docu/xx.so)              // 是在可执行文件main生成之后链接，所以main代表可执行文件名，语句要在add_executable()之后
+```
+- 另外一种方法实现链接库文件：就是把该库文件所在路径加入到CMAKE_INCLUDE_PATH中然后用find_path()指令。
+但注意：加入到CMAKE_INCLUDE_PATH并不代表他会把路径提供给编译器，还是需要自己用find_path找到该头文件。
+这种方式的优点在于，只要加入到路径后，所有find_指令都可以使用
+```
+export CMAKE_INCLUDE_PATH=/usr/local/include/test   
+find_path(myHeader hello.h)         // 把头文件找到，并赋值给变量myHeader
+include_directories(${myHeader})    // 把该路径包含进来
+```
+- 第三种方法实现链接库文件：就是利用find_package()来查找cmake支持的模块，或者自定义的模块来获得对应头文件和库文件路径。
+这种方法参考find_package()的使用。
+
+
+
+6. message()输出某个信息：
+- 其中输出类型可选择：STATUS(输出前缀为-的信息)，SEND_ERROR(产生错误)，FATAL_ERROR(终止cmake过程) 
+```
+message(STATUS "messages")  
+```
+
+7. file()对文件和文件夹的操作：比如搜索文件、打开文件、写入文件
+- 如果要自动搜索所有支持文件，则可以考虑自动搜索命令
 ```
 file(GLOB Sources *.cpp)
 file(GLOB Includes *.h)
 add_executable(Cars ${Sources} ${Includes})
 ```
-8. 如果要依赖某个已经安装的包，则可以用寻找包命令
+- 如果要创建文件夹路径：
 ```
-find_package(CUDA)
+file(MAKE_DIRECTORY ${xxx})   # 创建某个路径文件夹
 ```
-9. 如果要生成动态或者静态链接库，则采用添加
+
+9. add_library()如果要生成动态或者静态链接库，则采用add_library
+- 可以选择生成SHARED动态库, STATIC静态库
+- 注意：库名称不需要写前缀lib，系统会自动在给出的库名称前面加lib.
 ```
+// 创建动态库
 add_library(algorithms SHARED ${src_path})  // 创建动态链接库：库名称libalgorithms, SHARED表示为.so动态链接库，src_path是.cpp文件所在路径
+// 创建静态库
+set_target_properties(hello PROPERTIES CLEAN_DIRECT_OUTPUT 1)         // 设置不清除同名动态库hello.so
+set_target_properties(hello_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)  // 设置不清除同名静态库hello.a
+set_target_properties(hello_static PROPERTIES OUTPUT_NAME "hello")    // 设置静态库的输出名称为hello，从而即使跟动态库重名也能实现
+
 ```
-10. 如果要安装生成的头文件和库文件
+10. install()如果要安装生成的头文件和库文件：
+- 可以生成的目标文件包括3种：RUNTIME是可执行文件, LIBRARY是动态库, ARCHIVE是静态库
+- 可以指定安装路径，采用关键字DESTINATION接路径，注意如果是/开头的路径就是绝对路径，如果不是斜杠开头则默认基于CMAKE_INSTALL_PREFIX，也就是{CMAKE_INSTALL_PREFIX}/相对路径
+- 注意在clion中如果要安装，还需要手动进入项目cmake-build-debug文件夹，执行sudo make install执行，否则clion不会自动帮你安装。
 ```
-install()  // 安装头文件和库文件
+// 安装bin/lib库文件或者头文件
+${CMAKE_INSTALL_PREFIX}                     // 这个路径可以在cmake命令中通过-D CMAKE_INSTALL_PREFIX=/usr来设置到绝对路径
+install(TARGETS myrun mylib mystaticlib     // 表示有3个目标文件，分别对应下面3行
+        RUNTIME DESTINATION bin             // 目标文件类型RUNTIME也就是可执行文件，存放
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION libstatic)      // 安装头文件和库文件
+install(TARGETS test test_static            // 同时安装动态库test.so和静态库test_static.a
+        LIBRARY DESTINATION lib             // 动态库安装路径是相对路径/lib
+        ARCHIVE DESTINATION lib)            //
+// 安装.h头文件：用来提供运行可执行文件的sh脚本，一般一起放在可执行文件的bin路径
+install(PROGRAMS runhello.sh DESTINATION bin)// 安装sh文件
+// 安装普通文件
+install(FILES hello.h DESTINATION include/hello)  //安装头文件
 ```
+
+
+11. 如果要设置库文件版本号
+- 版本信息的通常定义：major_version主版本， minor_version次版本，patch_version补丁版本.
+  比如pytorch_0.4.1，代表主版本为0，次版本4，补丁1
+- 在cmake系统中的系统变量信息：
+```
+CMAKE_MAJOR_VERSION   //
+CMAKE_MINOR_VERSION   //
+CMAKE_PATCH_VERSION   //
+CMAKE_SYSTEM          // 系统名称，比如Linux-2.6.22
+```
+- 自定义库文件版本信息
+```
+???
+```
+
+12. 其他cmake控制指令
+```
+IF()
+ELSE()
+ENDIF()
+
+```
+
+13. cmake高级指令find_package: 是另外一种查找头文件和库文件的方法，是针对第三方库的常用方法(比如CUDA/opencv)。
+- 如果要使用find_package()查找第三方库的头文件和链接库文件路径：
+```
+find_package(CUDA REQUIRED)           # 查找某个第三方库的cmake module，比如CUDA代表的就是FindCUDA.cmake这个module
+find_package(OpenCV REQUIRED)         # 多个库分别查找， 然后统一加到include_directories和link_libraries即可 
+target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
+target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
+```
+
+- 如果要为自己写的库定义一个cmake module，则本质上就是先自己查找好头文件、库文件路径，然后欧放到某几个变量中。
+并且cmake统一规定这几个变量的写法：name_FOUND, name_LIBRARY, name_INCLUDE_DIR
+```
+find_path(TEST_INCLUDE_DIR test.h /usr/include/mytest
+        /usr/local/include/mytest)              # 先找到自己安装的头文件(test.h): 为了避免安装时prefix路径设置不同，这里同时在两个路径搜索
+find_library(TEST_LIBRARY NAMES mytest PATH /usr/lib
+        usr/local/lib)                         # 先找到自己安装的动态库(libmytest.so): 为了避免安装时prefix路径设置不同，这里同时在两个路径搜索
+
+if(TEST_INCLUDE_DIR AND TEST_LIBRARY)      # 如果找到则设置标志
+    set(TEST_FOUND TRUE)
+endif(TEST_INCLUDE_DIR AND TEST_LIBRARY)
+```
+
+14. 一些cmake常见编译错误
+- cmake版本太低：比如clion自带cmake的版本较高，但我系统的cmake版本较低，如果在命令行cmake ..则会提示版本太低无法编译，
+  此时需要去掉常用的那句cmake_minimum_required(VERSION 3.14)就可以，相当于对cmake版本不做要求进行编译
+- 
 
 11. 一个cmakelist参考：https://github.com/dusty-nv/jetson-inference/blob/master/docs/imagenet-example-2.md
 这是一个jetson nano进行tensorrt 模型的模板：
@@ -118,7 +250,7 @@ find_package(CUDA)
 find_package(Qt4)
 
 # setup Qt4 for build
-include(${QT_USE_FILE})
+include(${QT_USE_FILE})                  // 这个include指令用来载入cmakelists.txt文件(file)，也用于载入预定义的cmake模块(module),会在include语句时直接执行。
 add_definitions(${QT_DEFINITIONS})
 
 # compile the my-recognition program
@@ -127,6 +259,86 @@ cuda_add_executable(my-recognition my-recognition.cpp)
 # link my-recognition to jetson-inference library
 target_link_libraries(my-recognition jetson-inference)
 ```
+
+12. 一个针对tensorRT例程的cmakelists(来自https://oldpan.me/archives/tensorrt-code-toturial-1)
+````
+cmake_minimum_required(VERSION 3.12)
+project(tensorrt)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")	#set(CMAKE_CXX_STANDARD 11) -std=gnu++11
+
+set(CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
+
+find_package(CUDA)   # 查找CUDA
+
+# 在这里修改我们显卡的计算能力 这里我是sm_61
+set(
+        CUDA_NVCC_FLAGS
+        ${CUDA_NVCC_FLAGS};
+        -O3
+        -gencode arch=compute_61,code=sm_61
+)
+
+set(PROJECT_OUTPUT_DIR  ${PROJECT_BINARY_DIR}/${CMAKE_SYSTEM_PROCESSOR})
+set(PROJECT_INCLUDE_DIR ${PROJECT_OUTPUT_DIR}/include)
+
+file(MAKE_DIRECTORY ${PROJECT_INCLUDE_DIR})
+file(MAKE_DIRECTORY ${PROJECT_OUTPUT_DIR}/bin)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/bin)  # .exe .dll
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/lib)  # .dll .so
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/lib)  # .lib .a
+
+include_directories(${PROJECT_INCLUDE_DIR})
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+file(GLOB Sources *.cpp)
+file(GLOB Includes include/*.h)
+
+foreach(include ${Includes})
+    message("-- Copying ${include}")
+    configure_file(${include} ${PROJECT_INCLUDE_DIR} COPYONLY)
+endforeach()
+
+find_package(Protobuf)
+
+if(PROTOBUF_FOUND)
+    message(STATUS "    version: ${Protobuf_VERSION}")
+    message(STATUS "    libraries: ${PROTOBUF_LIBRARIES}")
+    message(STATUS "    include path: ${PROTOBUF_INCLUDE_DIR}")
+else()
+    message(WARNING "Protobuf not found, onnx model convert tool won't be built")
+endif()
+
+set(TENSORRT_ROOT /home/prototype/Downloads/TensorRT-5.0.2.6)
+find_path(TENSORRT_INCLUDE_DIR NvInfer.h
+        HINTS ${TENSORRT_ROOT} ${CUDA_TOOLKIT_ROOT_DIR}
+        PATH_SUFFIXES include)
+MESSAGE(STATUS "Found TensorRT headers at ${TENSORRT_INCLUDE_DIR}")
+find_library(TENSORRT_LIBRARY_INFER nvinfer
+        HINTS ${TENSORRT_ROOT} ${TENSORRT_BUILD} ${CUDA_TOOLKIT_ROOT_DIR}
+        PATH_SUFFIXES lib lib64 lib/x64)
+find_library(TENSORRT_LIBRARY_INFER_PLUGIN nvinfer_plugin
+        HINTS  ${TENSORRT_ROOT} ${TENSORRT_BUILD} ${CUDA_TOOLKIT_ROOT_DIR}
+        PATH_SUFFIXES lib lib64 lib/x64)
+set(TENSORRT_LIBRARY ${TENSORRT_LIBRARY_INFER} ${TENSORRT_LIBRARY_INFER_PLUGIN})
+MESSAGE(STATUS "Find TensorRT libs at ${TENSORRT_LIBRARY}")
+find_package_handle_standard_args(
+        TENSORRT DEFAULT_MSG TENSORRT_INCLUDE_DIR TENSORRT_LIBRARY)
+if(NOT TENSORRT_FOUND)
+    message(ERROR
+            "Cannot find TensorRT library.")
+endif()
+
+LINK_LIBRARIES("/home/prototype/Downloads/TensorRT-5.0.2.6/lib/libnvonnxparser.so")
+
+find_package(OpenCV REQUIRED)
+
+cuda_add_executable(tensorrt benchmark.cpp)
+
+target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
+target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
+
+````
 
 
 ### 关于最容易犯的简单错误
