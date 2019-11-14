@@ -1,0 +1,8 @@
+/usr/local/include/algorithms/node.h
+/usr/local/include/algorithms/search.h
+/usr/local/include/algorithms/list.h
+/usr/local/include/algorithms/sort.h
+/usr/local/include/algorithms/tree.h
+/usr/local/include/algorithms/link_list.h
+/usr/local/include/algorithms/queue.h
+/usr/local/include/algorithms/vector_op.h

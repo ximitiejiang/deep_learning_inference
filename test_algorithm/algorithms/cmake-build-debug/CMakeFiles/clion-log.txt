@@ -1,0 +1,15 @@
+/home/ubuntu/MySoftware/clion-2019.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms
+-- these .h files will be installed: /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/link_list.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/list.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/node.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/queue.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/search.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/sort.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/tree.h;/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/vector_op.h
+CMake Warning (dev) in CMakeLists.txt:
+  No cmake_minimum_required command is present.  A line of code such as
+
+    cmake_minimum_required(VERSION 3.14)
+
+  should be added at the top of the file.  The version specified may be lower
+  if you wish to support older CMake versions for this project.  For more
+  information run "cmake --help-policy CMP0000".
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/algorithms/cmake-build-debug

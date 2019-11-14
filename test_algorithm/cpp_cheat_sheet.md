@@ -164,6 +164,8 @@ set_target_properties(hello_static PROPERTIES OUTPUT_NAME "hello")    // 设置�
 - 可以指定安装路径，采用关键字DESTINATION接路径，注意如果是/开头的路径就是绝对路径，如果不是斜杠开头则默认基于CMAKE_INSTALL_PREFIX，也就是{CMAKE_INSTALL_PREFIX}/相对路径
 - 注意在clion中如果要安装，还需要手动进入项目cmake-build-debug文件夹，执行sudo make install执行，否则clion不会自动帮你安装。
 ```
+// 安装头文件
+install(FILES hello.h DESTINATION include/hello)  //安装头文件
 // 安装bin/lib库文件或者头文件
 ${CMAKE_INSTALL_PREFIX}                     // 这个路径可以在cmake命令中通过-D CMAKE_INSTALL_PREFIX=/usr来设置到绝对路径
 install(TARGETS myrun mylib mystaticlib     // 表示有3个目标文件，分别对应下面3行
@@ -173,10 +175,9 @@ install(TARGETS myrun mylib mystaticlib     // 表示有3个目标文件，分�
 install(TARGETS test test_static            // 同时安装动态库test.so和静态库test_static.a
         LIBRARY DESTINATION lib             // 动态库安装路径是相对路径/lib
         ARCHIVE DESTINATION lib)            //
-// 安装.h头文件：用来提供运行可执行文件的sh脚本，一般一起放在可执行文件的bin路径
+// 安装sh头文件：
 install(PROGRAMS runhello.sh DESTINATION bin)// 安装sh文件
-// 安装普通文件
-install(FILES hello.h DESTINATION include/hello)  //安装头文件
+
 ```
 
 
@@ -205,13 +206,17 @@ ENDIF()
 
 13. cmake高级指令find_package: 是另外一种查找头文件和库文件的方法，是针对第三方库的常用方法(比如CUDA/opencv)。
 - 如果要使用find_package()查找第三方库的头文件和链接库文件路径：
+注意：采用find_package()命令cmake的模块查找顺序是：先在变量${CMAKE_MODULE_PATH}查找，然后在/usr/shared/cmake/Modules/里边查找。
 ```
 find_package(CUDA REQUIRED)           # 查找某个第三方库的cmake module，比如CUDA代表的就是FindCUDA.cmake这个module
 find_package(OpenCV REQUIRED)         # 多个库分别查找， 然后统一加到include_directories和link_libraries即可 
 target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
 target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
 ```
-
+- 如果要查看cmake所自带支持的所有module和内容，就在如下路径中：
+```
+/usr/shared/cmake/Modules/    # 这个路径下所有FindXXXX.cmake都是cmake module文件(大部分是以Find开头，也有不是这么开头的)
+```
 - 如果要为自己写的库定义一个cmake module，则本质上就是先自己查找好头文件、库文件路径，然后欧放到某几个变量中。
 并且cmake统一规定这几个变量的写法：name_FOUND, name_LIBRARY, name_INCLUDE_DIR
 ```
