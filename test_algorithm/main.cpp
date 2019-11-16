@@ -64,6 +64,11 @@ void testListTree(){
 //    TNode n3(1);
 }
 
+void testInstance(){
+    // ClassName::Instance是否能创建一个对象指针
+    algorithms::ListTree *p = algorithms::ListTree::Instance()
+}
+
 
 
 int main(int argc, char *argv[]){
