@@ -5,6 +5,7 @@ CMakeFiles/test.dir/main.cpp.o: .././algorithms/link_list.h
 CMakeFiles/test.dir/main.cpp.o: .././algorithms/node.h
 CMakeFiles/test.dir/main.cpp.o: .././algorithms/queue.h
 CMakeFiles/test.dir/main.cpp.o: .././algorithms/tree.h
+CMakeFiles/test.dir/main.cpp.o: .././algorithms/vector_op.h
 CMakeFiles/test.dir/main.cpp.o: .././utils/arg_parse.h
 CMakeFiles/test.dir/main.cpp.o: .././utils/test_class.h
 CMakeFiles/test.dir/main.cpp.o: ../main.cpp

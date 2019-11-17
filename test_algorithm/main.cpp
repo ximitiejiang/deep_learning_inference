@@ -10,6 +10,7 @@
 #include "arg_parse.h"
 #include "vector_op.h"
 #include "test_class.h"
+#include <fstream>
 
 using namespace std;
 
@@ -64,19 +65,17 @@ void testListTree(){
 //    TNode n3(1);
 }
 
-void testInstance(){
-    // ClassName::Instance是否能创建一个对象指针
-    algorithms::ListTree *p = algorithms::ListTree::Instance()
-}
 
 
 
 int main(int argc, char *argv[]){
-//    Args args; // 初始化一个参数结构体
-//    sParams sp;
-    vector<int> nums{01,2,3,4,5,6}; int target = 4;
-    int result = searchInsertPosition(nums, target);
-    cout << result << endl;
+    fstream out("test.txt", ios::app);
+    out << "write to file." << endl;
+    out.close();
+
+//    vector<int> nums{01,2,3,4,5,6}; int target = 4;
+//    int result = searchInsertPosition(nums, target);
+//    cout << result << endl;
 
 
 //    bool argOK = argParser(args, argc, argv);

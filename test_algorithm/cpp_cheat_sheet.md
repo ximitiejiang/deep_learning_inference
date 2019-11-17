@@ -577,10 +577,10 @@ cin.getline()  // 以换行作为完成输入的标记
 1. 类型1(流的读写)，采用的对象是cin(istream类型)， cout(ostream类型)
 
 2. 类型2(文件的读写)，文件读写依靠创建3种类型的对象完成： ifstream, ofstream, fstream
-```
+```"// fstream的对象其实就相当于cout, cin
 // 打开一个文件，可以用obj.open()，也可用fstream的构造函数
-ofstream out("xxx.txt", ios::out);
-out.open("xxx.txt", ios::out);      // 用open()函数打开跟用构造函数打开是等效的。
+ofstream out("xxx.txt", ios::out);   // 方式1：用构造函数打开
+out.open("xxx.txt", ios::out);       // 方式2：用open()函数打开跟用构造函数打开是等效的。
 ```
 - 其中读写模式包括：
     - ios::in

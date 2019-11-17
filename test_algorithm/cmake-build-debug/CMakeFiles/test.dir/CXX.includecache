@@ -22,6 +22,8 @@ vector
 iostream
 -
 
+.././algorithms/vector_op.h
+
 .././utils/arg_parse.h
 string
 -
@@ -45,6 +47,10 @@ tree.h
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/tree.h
 arg_parse.h
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/arg_parse.h
+vector_op.h
+/home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/vector_op.h
 test_class.h
 /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/test_class.h
+fstream
+-
 

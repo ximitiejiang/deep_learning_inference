@@ -6,6 +6,7 @@ CMakeFiles/test.dir/main.cpp.o
  .././algorithms/node.h
  .././algorithms/queue.h
  .././algorithms/tree.h
+ .././algorithms/vector_op.h
  .././utils/arg_parse.h
  .././utils/test_class.h
  /home/ubuntu/suliang_git/deep_learning_inference/test_algorithm/main.cpp
