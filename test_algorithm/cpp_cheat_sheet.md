@@ -28,6 +28,14 @@ F9              //运行到断点=c
 - 在c++里边，如要知道某个类来自哪个头文件，需要用clion自带搜索快捷键(shift+shift)，可以找到每个类的原始出处。
 也可以找到每个namespace的原始出处(如果有多个namespace原始出处，则都会列出来)，非常方便。
 
+### 用gdb调试
+```
+gdb          # 启动gdb
+file test   # 打开可执行文件test
+b main      # 在函数main设置断点
+run         # 开始运行
+n           # 运行一句
+```
 
 ### 关于tensorRT
 1. 安装c++版本的tensorRT:
@@ -102,6 +110,7 @@ add_subdirectory(src)
   另一个是target_include_directories()这是需要放在在生成可执行文件之后。
 ```
 include_directories(./common)
+
 target_include_directories(main ./common)
 ```
 
@@ -116,6 +125,7 @@ link_libraries(/usr/lib/docum/xxx.so /usr/local/lib/xxx.so)  // 是在可执行�
 
 target_link_libraries(main /usr/lib/docu/xx.so)              // 是在可执行文件main生成之后链接，所以main代表可执行文件名，语句要在add_executable()之后
 ```
+
 - 另外一种方法实现链接库文件：就是把该库文件所在路径加入到CMAKE_INCLUDE_PATH中然后用find_path()指令。
 但注意：加入到CMAKE_INCLUDE_PATH并不代表他会把路径提供给编译器，还是需要自己用find_path找到该头文件。
 这种方式的优点在于，只要加入到路径后，所有find_指令都可以使用
@@ -204,6 +214,14 @@ ENDIF()
 
 ```
 
+14. find_library()和find_path()查找库文件和头文件
+- 查找库文件需提供库文件名，用find_library(var name HINTS path PATH_SUFFIXES suff1 suff2), 即搜索名称为name的库文件(实际名称是libname.so)，找到后存入var中，
+  并可以带多个关键参数，其中HINTS关键参数代表搜索路径，PATH_SUFFIXES代表路径后缀
+```
+find_library(_NVINFER_LIB nvinfer HINTS ${TRT_LIB} PATH_SUFFIXES lib lib64)
+```
+- 查找头文件需提供头文件名，用find_path()
+
 13. cmake高级指令find_package: 是另外一种查找头文件和库文件的方法，是针对第三方库的常用方法(比如CUDA/opencv)。
 - 如果要使用find_package()查找第三方库的头文件和链接库文件路径：
 注意：采用find_package()命令cmake的模块查找顺序是：先在变量${CMAKE_MODULE_PATH}查找，然后在/usr/shared/cmake/Modules/里边查找。
@@ -218,17 +236,25 @@ target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBL
 /usr/shared/cmake/Modules/    # 这个路径下所有FindXXXX.cmake都是cmake module文件(大部分是以Find开头，也有不是这么开头的)
 ```
 - 如果要为自己写的库定义一个cmake module，则本质上就是先自己查找好头文件、库文件路径，然后欧放到某几个变量中。
-并且cmake统一规定这几个变量的写法：name_FOUND, name_LIBRARY, name_INCLUDE_DIR
+并且cmake统一规定这几个变量的写法：name_FOUND, name_INCLUDE_DIR, name_LIBRARY.
+从而只要知道某些库的module关键字(一般大写)，然后运行find_package(关键字)，然后就能得到两个变量：关键字_INCLUDE_DIR, 关键字_LIBRARY，从而就可以用include_directories(), link_libraries()进行设置了。
 ```
-find_path(TEST_INCLUDE_DIR test.h /usr/include/mytest
-        /usr/local/include/mytest)              # 先找到自己安装的头文件(test.h): 为了避免安装时prefix路径设置不同，这里同时在两个路径搜索
-find_library(TEST_LIBRARY NAMES mytest PATH /usr/lib
-        usr/local/lib)                         # 先找到自己安装的动态库(libmytest.so): 为了避免安装时prefix路径设置不同，这里同时在两个路径搜索
+#　如下是一个名为FindTEST.cmake的module的写法: 关键字是TEST
+# 先找到自己安装的头文件(test.h): 为了避免安装时prefix路径设置不同，这里同时在两个默认存放头文件的路径寻找，一个是所有用户路径，一个是登录用户路径。
+find_path(TEST_INCLUDE_DIR test.h /usr/include/mytest      # 表示寻找test.h文件，找到则把路径赋值给变量TEST_INCLUDE_DIR
+        /usr/local/include/mytest)              
+# 再找到自己安装的动态库(libmytest.so): 为了避免安装时prefix路径设置不同，这里也同时在两个路径搜索
+find_library(TEST_LIBRARY NAMES mytest PATH /usr/lib       #　NAMES是关键字,表示寻找名称为mytest(实际名称libmytest.so)的头文件，PATH也是关键字，表示在接下来2个路径中寻找
+        usr/local/lib)                         
 
 if(TEST_INCLUDE_DIR AND TEST_LIBRARY)      # 如果找到则设置标志
     set(TEST_FOUND TRUE)
 endif(TEST_INCLUDE_DIR AND TEST_LIBRARY)
 ```
+
+- 可见：如果已知头文件库文件路径，可直接用target_include_directories()和target_link_libraries()进行添加。
+  而如果不知道头文件库文件路径，可以有另外2个方法，一种采用find_package()相当于变量赋值然后用target_include_directories()和target_link_libraries()设置即可。
+  另一种采用find_library()和
 
 14. 一些cmake常见编译错误
 - cmake版本太低：比如clion自带cmake的版本较高，但我系统的cmake版本较低，如果在命令行cmake ..则会提示版本太低无法编译，
@@ -263,6 +289,38 @@ cuda_add_executable(my-recognition my-recognition.cpp)
 
 # link my-recognition to jetson-inference library
 target_link_libraries(my-recognition jetson-inference)
+```
+
+11. 一个针对tensorRT的cmakelists(来自官方python教程uff-ssd里边)
+```
+# -------- CONFIGURATION --------
+find_package(CUDA REQUIRED)          #寻找cuda的module，赋值给变量CUDA_LIB，CUDA_INCLUDE
+
+set_ifndef(TRT_LIB /usr/lib/x86_64-linux-gnu)
+set_ifndef(TRT_INCLUDE /usr/include/x86_64-linux-gnu)
+set_ifndef(CUDA_ROOT /usr/local/cuda)
+
+# TensorRT's nvinfer lib
+find_library(_NVINFER_LIB nvinfer HINTS ${TRT_LIB} PATH_SUFFIXES lib lib64)
+set_ifndef(NVINFER_LIB ${_NVINFER_LIB})
+
+# cuBLAS
+find_library(_CUBLAS_LIB cublas HINTS ${CUDA_ROOT} PATH_SUFFIXES lib lib64)
+set_ifndef(CUBLAS_LIB ${_CUBLAS_LIB})
+
+# CUDA include dir
+find_path(_CUDA_INC_DIR cuda_runtime_api.h HINTS ${CUDA_ROOT} PATH_SUFFIXES include)
+set_ifndef(CUDA_INC_DIR ${_CUDA_INC_DIR})
+
+# -------- BUILDING --------
+include_directories(${TRT_INCLUDE} ${CUDA_INC_DIR})
+add_library(flattenconcat MODULE
+    ${CMAKE_SOURCE_DIR}/plugin/FlattenConcat.cpp
+)
+
+# Link TensorRT's nvinfer lib
+target_link_libraries(flattenconcat PRIVATE ${NVINFER_LIB} ${CUBLAS_LIB})
+
 ```
 
 12. 一个针对tensorRT例程的cmakelists(来自https://oldpan.me/archives/tensorrt-code-toturial-1)
@@ -465,10 +523,6 @@ static int a;   //
 - 局部变量：定义在函数体内，或者定义在某个语句块内，则具有函数作用域或语句块作用域
 - 静态全局变量：在全局变量前面添加static，从而把作用域收缩到本文件，其他文件即使声明extern也不可见。
 - 静态局部变量：在局部变量前面添加static，从而把作用域收缩到局部，其他函数或者位置块都不可见。
-
-- 静态成员：静态成员是类的成员而不是对象成员，也不会被实例化，但可以被对象访问。
-  无论是静态变量、静态函数、静态成员，都是单独放在静态存储区，因为已经地址固定，所以必然会被初始化为0。
-  相比之下，其他变量由于是放在动态存储区(栈区)，所以初始化值是随机的，最好自己手动初始化。
 - static变量表示该部分会放在静态存储区而不是在栈区。
 ```
 int a = 3;     // 全局变量：本文件可访问，其他文件声明后可访问，extern int a;
@@ -492,6 +546,8 @@ int main(){
 static int sum;  // 这个值会初始化为0
 int sum;         // 这个值随机。
 ```
+
+
 
 7. 一些特殊数据类型(CP-103)
 - size_t类型
@@ -1168,13 +1224,26 @@ inline int add(int a, int b){return a+b;}
 this->mem();    // 调用对象成员函数
 return *this;   // 代表返回该对象本身  
 ```
-6. 类的静态成员：用于声明成员只跟类相关，而跟对象无关。
+6. 类的静态成员：用于声明成员只跟类相关，而跟对象无关。(CP-270)
 - 类的静态成员包括静态成员变量，和静态成员函数
 - 静态成员也可以分布在public, private, protect之间
-- 声明static静态成员，关键字只能用在类内（貌似static, friend, inline都是用在类内）
+- 声明static静态成员，关键字只能用在类内，类外不写static（貌似static, friend, inline都是用在类内）
+- 注意：静态成员的初始化不能在类内完成，否则每个对象初始化时都要初始化静态成员。所以静态成员只能单独在类外初始化！
 ```
-static double rate(){return }
+class IntroState{
+static IntroState m_state;     // 类内定义了静态变量，类型是IntroState，且没有初始化
+}
+IntroState IntroState::m_state; // 类外初始化静态成员
 ```
+- 调用静态成员
+```
+IntroState IntroState::m_state;  // 采用作用域运算符访问
+IntroState is; IntroState *isp;
+is.m_state;     // 直接访问成员
+isp->m_state;   // 指针访问成员  
+```
+
+
 7. 类的const函数： 代表不能修改类成员的函数。
 ```
 

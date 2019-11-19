@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6"/>
 	<Project>
-		<Option title="onnx_to_trt"/>
+		<Option title="onnx_mnist"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
 		<Option virtualFolders="CMake Files\;"/>
@@ -34,9 +34,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
 					<Add directory="/home/ubuntu/TensorRT-6.0.1.5/include"/>
 					<Add directory="/usr/local/cuda-9.0/include"/>
+					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -60,9 +60,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
 					<Add directory="/home/ubuntu/TensorRT-6.0.1.5/include"/>
 					<Add directory="/usr/local/cuda-9.0/include"/>
+					<Add directory="/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/../common"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>

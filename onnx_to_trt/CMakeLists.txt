@@ -1,68 +1,67 @@
-cmake_minimum_required(VERSION 3.14)
-project(onnx_to_trt)
-set(CMAKE_CXX_STANDARD 14)             # 相当于-std=gnu++11
-set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILIER})  # 设置主编译器
-find_package(CUDA)       # 查找CUDA cmake module进行调用
+# 来自tensorRTc++堆里遭找到的
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
-# 修改显卡计算能力
+project(onnx_mnist)
 
-set(PROJECT_OUTPUT_DIR ${PROJECT_BINARY_DIR}/${CMAKE_SYSTEM_PROCESSOR})  # 项目输出路径？  cmake系统处理器？
-set(PROJECT_INCLUDE_DIR ${PROJECT_OUTPUT_DIR}/include)          # 项目include路径?
+# Enable all compile warnings
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic -Wno-deprecated-declarations")
+# Use C++11
+set(CMAKE_CXX_STANDARD 11)
 
-file(MAKE_DIRECTORY ${PROJECT_INCLUDE_DIR})             # 创建项目include路径
-file(MAKE_DIRECTORY ${PROJECT_OUTPUT_DIR}/bin)          # 创建项目输出路径
+# 自定义了一个宏指令：set_ifndef，用来操作当var不存在时，设置默认的val值
+macro(set_ifndef var val)
+    if (NOT ${var})
+        set(${var} ${val})
+    endif()
+    message(STATUS "Configurable variable ${var} set to ${${var}}")
+endmacro()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/bin)  # .exe .dll 可执行文件生成路径
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/lib)  # .dll .so  动态库生成路径
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIR}/lib)  # .lib .a   静态库生成路径
+# -------- CONFIGURATION --------
+find_package(CUDA REQUIRED)
 
-include_directories(${PROJECT_INCLUDE_DIR})         # 包含项目include路径？
-include_directories(${PROJECT_SOURCE_DIR}/include)  # 包含项目路径
+set(TRT_LIB /home/ubuntu/TensorRT-6.0.1.5/lib)         # 存放libnvinfer.so等动态库
+set(TRT_INCLUDE /home/ubuntu/TensorRT-6.0.1.5/include) # 存放NvInfer.h等头文件
+set(CUDA_ROOT /usr/local/cuda-9.0)
+
+#set_ifndef(TRT_LIB /usr/lib/x86_64-linux-gnu)
+#set_ifndef(TRT_INCLUDE /usr/include/x86_64-linux-gnu)
+#set_ifndef(CUDA_ROOT /usr/local/cuda)
+
+# Find dependencies:
+message("\nThe following variables are derived from the values of the previous variables unless provided explicitly:\n")
+
+# TensorRT's nvinfer lib
+find_library(_NVINFER_LIB nvinfer HINTS ${TRT_LIB} PATH_SUFFIXES lib lib64)
+set_ifndef(NVINFER_LIB ${_NVINFER_LIB})
+
+# cuBLAS
+find_library(_CUBLAS_LIB cublas HINTS ${CUDA_ROOT} PATH_SUFFIXES lib lib64)
+set_ifndef(CUBLAS_LIB ${_CUBLAS_LIB})
+
+# CUDA include dir
+find_path(_CUDA_INC_DIR cuda_runtime_api.h HINTS ${CUDA_ROOT} PATH_SUFFIXES include)
+set_ifndef(CUDA_INC_DIR ${_CUDA_INC_DIR})
+
+# common include
+#set(COMMON_INC_DIR /home/ubuntu/TensorRT-6.0.1.5/samples/common)
+set(COMMON_INC_DIR ../common)
+
+# -------- BUILDING --------
+#include_directories(${TRT_INCLUDE} ${CUDA_INC_DIR})
+#add_library(flattenconcat MODULE
+#    ${CMAKE_SOURCE_DIR}/plugin/FlattenConcat.cpp
+#)
 
 file(GLOB Sources *.cpp)        # 查找cpp文件和h头文件作为接下来可执行文件生成的支持文件
 file(GLOB Includes include/*.h)
 
-foreach(include ${Includes})    #  include ?   configure_file ?
-    message("-- Copying ${include}")
-    configure_file(${include} ${PROJECT_INCLUDE_DIR} COPYONLY)
-endforeach()
-
-find_package(Protobuf)            # 查找protobuf的cmake module，并输出其版本等信息
-if(PROTOBUF_FOUND)
-    message(STATUS "    version: ${Protobuf_VERSION}")
-    message(STATUS "    libraries: ${PROTOBUF_LIBRARIES}")
-    message(STATUS "    include path: ${PROTOBUF_INCLUDE_DIR}")
-else()
-    message(WARNING "Protobuf not found, onnx model convert tool won't be built")
-endif()
-
-set(TENSORRT_ROOT /home/ubuntu/TensorRT-6.0.1.5)   # 设置tensorRT安装路径
-# 在tensorRT的include路径中查找NvInfer.h头文件
-find_path(TENSORRT_INCLUDE_DIR NvInfer.h
-        HINTS ${TENSORRT_ROOT} ${CUDA_TOOLKIT_ROOT_DIR}
-        PATH_SUFFIXES include)
-
-#
-find_library(TENSORRT_LIBRARY_INFER nvinfer
-        HINTS ${TENSORRT_ROOT} ${TENSORRT_BUILD} ${CUDA_TOOLKIT_ROOT_DIR}
-        PATH_SUFFIXES lib lib64 lib/x64)
-
-find_library(TENSORRT_LIBRARY_INFER_PLUGIN nvinfer_plugin
-        HINTS  ${TENSORRT_ROOT} ${TENSORRT_BUILD} ${CUDA_TOOLKIT_ROOT_DIR}
-        PATH_SUFFIXES lib lib64 lib/x64)
-
-set(TENSORRT_LIBRARY ${TENSORRT_LIBRARY_INFER} ${TENSORRT_LIBRARY_INFER_PLUGIN})
-MESSAGE(STATUS "Find TensorRT libs at ${TENSORRT_LIBRARY}")
-
-
-include_directories(../common)
-include_directories(/home/ubuntu/TensorRT-6.0.1.5/include)
-include_directories(/usr/local/cuda-9.0/include)
+add_executable(onnx_mnist ${Sources} ${Includes})
+# Link TensorRT's nvinfer lib
+#target_link_libraries(flattenconcat PRIVATE ${NVINFER_LIB} ${CUBLAS_LIB})
+target_include_directories(onnx_mnist PRIVATE ${TRT_INCLUDE} ${CUDA_INC_DIR} ${COMMON_INC_DIR})
+target_link_libraries(onnx_mnist ${NVINFER_LIB} ${CUBLAS_LIB})
 
 
 
-
-cuda_add_executable(tensorrt benchmark.cpp)
-
-target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
-target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
+#target_include_directories(onnx_mnist PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
+#target_link_libraries(onnx_mnist ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
