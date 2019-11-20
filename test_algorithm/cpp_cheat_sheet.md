@@ -56,6 +56,10 @@ make install   //(optional)安装
 
 make clean     // 清理工程
 ```
+2. cmake的调试很简单：写好以后，把相应的输出通过message()打印出来进行验证，然后在clion的cmake选项卡里边就能够看到输出了。
+注意：不是在terminal终端看到的，也不是在message选项卡看到。而是在cmake选项卡中有显示。
+
+
 2. 在一个大项目下面，可以有独立的小项目，每个独立小项目都对应一个独立cmakelists：
 - 创建小项目文件夹，里边生成小项目cmakelists, cpp, .h文件
 - 右键点击任何一个cmakelists，都可以看到2个选项之一：如果已经是当前cmakelists，会看到reload cmakelists选项。
@@ -598,12 +602,58 @@ double c = a + b;   // 新定义一个类型达到强制转换效果
 (double)a+b;        // c语言风格的强制类型转换
 double(a+b)         // c++早期函数式强制类型转换
 ```
-5. c++的类型转换
+5. c++的类型转换 (CP-145-730)
+- static_cast<type>(expression) 用于明确的类型转换，唯一不能处理const类型的转换
+- const_cast<type>(expression) 用于对const对象进行转换，往往用来"去掉const"属性
+- dynamic_cast<type>(expression) 用于运行时的类型识别，然后转换。
+```
+int b = static<int>(float_a);  // 把float转换为int
+
+const char *cp;
+char *q = const_cast<char*>(cp);  // 去掉了const属性
+
 ```
 
+### 关于枚举类型(CP-737)
+- 枚举类型分两类：一类限定作用域的枚举类型，另一类不限定作用域的枚举类型
+  限定作用域的枚举类型，其作用域只在class/struct的括号内
+  而不限定作用域的枚举类型，则与枚举变量一致。
 ```
+enum class ename{};  // 带关键字class/struct的是限定作用域的枚举类型：括号外部不可以访问
+enum struct ename{};
 
+enum color{red, yellow, green}; // 不限定作用域的枚举类型：括号外部可以访问
+```
+- 枚举类型的成员：本质上相当与常量，其默认值是从0开始，依次加1， 也可以手动赋值，且取值可以相同
+```
+enum type{chartyp = 8, shorttyp = 16, inttype=16};  // 手动赋值枚举值，可以不同值也可以相同值
+enum color{red, yellow, green}; // 此时采用默认赋值，red=0, yellow=1, green=2
+```
+- 枚举成员类型：默认是int, 可手动指定。
+同时注意：枚举成员是const，只能用常量或常量表达式赋值。
+```
+enum value : unsigned long long {charT = 255, shortT=65535, intT=65535};  // 用冒号手动指定类型
+```
+- 初始化一个新的枚举对象： 可以采用另一个枚举对象或者采用另一个枚举成员(CP-739)
+注意：一定不能用某个值赋值给某枚举类型，但可以用某个枚举成员(即使他等于某个值)复制给某个枚举对象。
+这样的好处是：可以先定义一个枚举类型，也就相当于定义了一组常量，然后任何新的枚举对象，都可以用枚举成员赋值，
+也就是实现了用可理解的枚举成员去作为常数值，赋值给新变量，新变量可当成某常数值用在swith/if/类成员
+```
+enum color{red, yellow, green}; // 先定义一个枚举
 
+color cp1;
+color cp2 = cp1;    // 用另一个枚举对象初始化
+color cp3 = red;    // 用另一个枚举对象的成员初始化
+
+class AAA{
+public:
+    enum color{red, yellow, green};
+}
+
+AAA *pa;
+pa->red;  // 枚举成员就相当于类的成员了。(作用域放大到了类内)
+```
+-
 
 ### 对比c与c++的输入输出语句
 1. 如果是用c的类型，则包含stdio.h, 且需要自己指定数据类型
@@ -1202,6 +1252,9 @@ Queue(int a, int b) : mA(a), mB(b) {}; //这个是初始化列表对类成员函
 - public：类内，类外都可访问
 - private：类内开放，类外关闭。(友元函数开放)
 - protect：等同于private，类内开放，类外关闭。(派生类内开放，类外关闭，友元函数开放)
+- 简单理解就是：类是个房子，private是房子内的东西，外边只能通过接口也就是public方法来访问，连房子的对象(女朋友)都不能访问。
+  而房子的友元(闺蜜)是可以访问的。而protect则是房子派生出其他工厂厂房，出于保密，受保护的数据可以share给派生类，但private依然不能给派生类。
+  这整个逻辑跟现实世界一模一样。
 
 4. 友元的定义：用来给其他类和对象访问private数据提供通道，可以定义友元函数和友元类
 - 某个类的友元函数，需要在类的成员函数声明处声明一个友元函数，而对该外部函数则完全没有影响(相当于改了锁，用户名就不用改了)
