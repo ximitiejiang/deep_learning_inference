@@ -150,7 +150,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=onnx_mnist
+CMAKE_PROJECT_NAME:STATIC=onnx_to_trt
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -211,6 +211,15 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Path to a file.
+COMMON_INC_DIR:PATH=/home/ubuntu/TensorRT-6.0.1.5/samples/common
+
+//Path to a library.
+CUBLAS_LIB:FILEPATH=/usr/local/cuda-9.0/lib64/libcublas.so
+
+//Path to a library.
+CUDART_LIB:FILEPATH=/usr/local/cuda-9.0/lib64/libcudart.so
+
 //Compile device code in 64 bit mode
 CUDA_64_BIT_DEVICE_CODE:BOOL=ON
 
@@ -239,6 +248,9 @@ CUDA_HOST_COMPILATION_CPP:BOOL=ON
 
 //Host side compiler used by NVCC
 CUDA_HOST_COMPILER:FILEPATH=/usr/bin/cc
+
+//Path to a file.
+CUDA_INC_DIR:PATH=/usr/local/cuda-9.0/include
 
 //Path to a program.
 CUDA_NVCC_EXECUTABLE:FILEPATH=/usr/local/cuda-9.0/bin/nvcc
@@ -353,11 +365,23 @@ CUDA_npps_LIBRARY:FILEPATH=/usr/local/cuda-9.0/lib64/libnpps.so
 //Path to a library.
 CUDA_rt_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
 
+//Path to a library.
+NVINFER_LIB:FILEPATH=/home/ubuntu/TensorRT-6.0.1.5/lib/libnvinfer.so
+
 //Path to a program.
 ProcessorCount_cmd_getconf:FILEPATH=/usr/bin/getconf
 
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/sbin/sysctl
+
+//Value Computed by CMake
+Project_BINARY_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug
+
+//Value Computed by CMake
+Project_SOURCE_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt
+
+//Path to a file.
+TRT_INC_DIR:PATH=/home/ubuntu/TensorRT-6.0.1.5/include
 
 //Path to a library.
 _CUBLAS_LIB:FILEPATH=/usr/local/cuda-9.0/lib64/libcublas.so
@@ -373,6 +397,12 @@ onnx_mnist_BINARY_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/on
 
 //Value Computed by CMake
 onnx_mnist_SOURCE_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt
+
+//Value Computed by CMake
+onnx_to_trt_BINARY_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug
+
+//Value Computed by CMake
+onnx_to_trt_SOURCE_DIR:STATIC=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt
 
 
 ########################
@@ -491,7 +521,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

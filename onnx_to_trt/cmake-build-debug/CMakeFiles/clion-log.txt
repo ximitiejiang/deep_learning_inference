@@ -1,34 +1,11 @@
 /home/ubuntu/clion-2019.1.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt
--- The C compiler identification is GNU 5.4.0
--- The CXX compiler identification is GNU 5.4.0
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc -- works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
--- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ -- works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Looking for pthread.h
--- Looking for pthread.h - found
--- Looking for pthread_create
--- Looking for pthread_create - not found
--- Looking for pthread_create in pthreads
--- Looking for pthread_create in pthreads - not found
--- Looking for pthread_create in pthread
--- Looking for pthread_create in pthread - found
--- Found Threads: TRUE  
--- Found CUDA: /usr/local/cuda-9.0 (found version "9.0") 
-
-The following variables are derived from the values of the previous variables unless provided explicitly:
-
--- Configurable variable NVINFER_LIB set to /home/ubuntu/TensorRT-6.0.1.5/lib/libnvinfer.so
--- Configurable variable CUBLAS_LIB set to /usr/local/cuda-9.0/lib64/libcublas.so
--- Configurable variable CUDA_INC_DIR set to /usr/local/cuda-9.0/include
+-- nvinfer lib: /home/ubuntu/TensorRT-6.0.1.5/lib/libnvinfer.so
+-- cublas lib: /usr/local/cuda-9.0/lib64/libcublas.so
+-- cudart lib: /usr/local/cuda-9.0/lib64/libcudart.so
+-- cuda include dir: /usr/local/cuda-9.0/include
+-- trt include dir: /home/ubuntu/TensorRT-6.0.1.5/include
+-- cpp file: /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/common/getOptions.cpp;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/common/logger.cpp;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/common/main.cpp;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/common/sampleEngines.cpp;/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/common/sampleOptions.cpp
+-- head file: 
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug

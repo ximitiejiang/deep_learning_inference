@@ -81,6 +81,7 @@ onnx_mnist: CMakeFiles/onnx_mnist.dir/main.cpp.o
 onnx_mnist: CMakeFiles/onnx_mnist.dir/build.make
 onnx_mnist: /home/ubuntu/TensorRT-6.0.1.5/lib/libnvinfer.so
 onnx_mnist: /usr/local/cuda-9.0/lib64/libcublas.so
+onnx_mnist: /usr/local/cuda-9.0/lib64/libcudart.so
 onnx_mnist: CMakeFiles/onnx_mnist.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ubuntu/suliang_git/deep_learning_inference/onnx_to_trt/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable onnx_mnist"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/onnx_mnist.dir/link.txt --verbose=$(VERBOSE)

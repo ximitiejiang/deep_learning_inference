@@ -120,35 +120,8 @@ onnx_mnist: cmake_check_build_system
 
 # fast build rule for target.
 onnx_mnist/fast:
-	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/build
+	$(MAKE) -f common/CMakeFiles/onnx_mnist.dir/build.make common/CMakeFiles/onnx_mnist.dir/build
 .PHONY : onnx_mnist/fast
-
-main.o: main.cpp.o
-
-.PHONY : main.o
-
-# target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.o
-.PHONY : main.cpp.o
-
-main.i: main.cpp.i
-
-.PHONY : main.i
-
-# target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.i
-.PHONY : main.cpp.i
-
-main.s: main.cpp.s
-
-.PHONY : main.s
-
-# target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/onnx_mnist.dir/build.make CMakeFiles/onnx_mnist.dir/main.cpp.s
-.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -157,11 +130,8 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... onnx_mnist"
 	@echo "... edit_cache"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... onnx_mnist"
 .PHONY : help
 
 
