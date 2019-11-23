@@ -65,13 +65,31 @@ void testListTree(){
 //    TNode n3(1);
 }
 
+// 测试元素指针和数组指针
+void testptr(){
+    int a = 32;
+    int b[3] = {1,2,3};
+    int c[2][3] = {{1,2,3},{4,5,6}};  // c是数组指针，也就是指向数组的指针
 
+    // 数组名：本身代表首元素地址，也就是元素指针。同时可以对数组名取地址
+    int *b1 = b;
+    int (*b2)[3]=&b;
+
+    cout << *b1 << " " << **b2 << endl;
+
+    int *p1 = &a;
+    int *p2 = b;        // b是数组名，是元素指针
+    int (*p3)[3] = c;   // p3是数组指针
+    p3 = &b;
+    int *p4[3] = {&a,b};    // p4是元素类型指针
+
+    cout << *p1 << " " << *p2 << " "<< **p3 <<" "<< *p4<<endl;
+
+}
 
 
 int main(int argc, char *argv[]){
-    fstream out("test.txt", ios::app);
-    out << "write to file." << endl;
-    out.close();
+    testptr();
 
 //    vector<int> nums{01,2,3,4,5,6}; int target = 4;
 //    int result = searchInsertPosition(nums, target);
@@ -82,7 +100,7 @@ int main(int argc, char *argv[]){
 //    cout << args.model_dir << endl;
 //    cout << args.dataset_dir << endl;
 
-    testLinkList();
+//    testLinkList();
 
 
     cout << "finished!" << endl;

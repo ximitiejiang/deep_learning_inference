@@ -204,6 +204,49 @@ include_directories(${myHeader})    // 把该路径包含进来
 这种方法参考find_package()的使用。
 
 
+14. find_library()和find_path()查找库文件和头文件
+- 查找库文件需提供库文件名，用find_library(var name HINTS path PATH_SUFFIXES suff1 suff2), 即搜索名称为name的库文件(实际名称是libname.so)，找到后存入var中，
+  并可以带多个关键参数，其中HINTS关键参数代表搜索路径，PATH_SUFFIXES代表路径后缀
+```
+find_library(_NVINFER_LIB nvinfer HINTS ${TRT_LIB} PATH_SUFFIXES lib lib64)
+```
+- 查找头文件需提供头文件名，用find_path()
+
+13. cmake高级指令find_package: 是另外一种查找头文件和库文件的方法，是针对第三方库的常用方法(比如CUDA/opencv)。
+- 如果要使用find_package()查找第三方库的头文件和链接库文件路径：
+注意：采用find_package()命令cmake的模块查找顺序是：先在变量${CMAKE_MODULE_PATH}查找，然后在/usr/shared/cmake/Modules/里边查找。
+```
+find_package(CUDA REQUIRED)           # 查找某个第三方库的cmake module，比如CUDA代表的就是FindCUDA.cmake这个module
+find_package(OpenCV REQUIRED)         # 多个库分别查找， 然后统一加到include_directories和link_libraries即可 
+target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
+target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
+```
+- 如果要查看cmake所自带支持的所有module和内容，就在如下路径中：
+```
+/usr/shared/cmake/Modules/    # 这个路径下所有FindXXXX.cmake都是cmake module文件(大部分是以Find开头，也有不是这么开头的)
+```
+- 如果要为自己写的库定义一个cmake module，则本质上就是先自己查找好头文件、库文件路径，然后欧放到某几个变量中。
+并且cmake统一规定这几个变量的写法：name_FOUND, name_INCLUDE_DIR, name_LIBRARY.
+从而只要知道某些库的module关键字(一般大写)，然后运行find_package(关键字)，然后就能得到两个变量：关键字_INCLUDE_DIR, 关键字_LIBRARY，从而就可以用include_directories(), link_libraries()进行设置了。
+```
+#　如下是一个名为FindTEST.cmake的module的写法: 关键字是TEST
+# 先找到自己安装的头文件(test.h): 为了避免安装时prefix路径设置不同，这里同时在两个默认存放头文件的路径寻找，一个是所有用户路径，一个是登录用户路径。
+find_path(TEST_INCLUDE_DIR test.h /usr/include/mytest      # 表示寻找test.h文件，找到则把路径赋值给变量TEST_INCLUDE_DIR
+        /usr/local/include/mytest)              
+# 再找到自己安装的动态库(libmytest.so): 为了避免安装时prefix路径设置不同，这里也同时在两个路径搜索
+find_library(TEST_LIBRARY NAMES mytest PATH /usr/lib       #　NAMES是关键字,表示寻找名称为mytest(实际名称libmytest.so)的头文件，PATH也是关键字，表示在接下来2个路径中寻找
+        usr/local/lib)                         
+
+if(TEST_INCLUDE_DIR AND TEST_LIBRARY)      # 如果找到则设置标志
+    set(TEST_FOUND TRUE)
+endif(TEST_INCLUDE_DIR AND TEST_LIBRARY)
+```
+
+- 可见：如果已知头文件库文件路径，可直接用target_include_directories()和target_link_libraries()进行添加。
+  而如果不知道头文件库文件路径，可以有另外2个方法，一种采用find_package()相当于变量赋值然后用target_include_directories()和target_link_libraries()设置即可。
+  另一种采用find_library()和
+
+
 
 6. message()输出某个信息：
 - 其中输出类型可选择：STATUS(输出前缀为-的信息)，SEND_ERROR(产生错误)，FATAL_ERROR(终止cmake过程) 
@@ -289,47 +332,6 @@ macro(set_ifndef var val)   # 函数名，参数1，参数2...
 endmacro()
 ```
 
-14. find_library()和find_path()查找库文件和头文件
-- 查找库文件需提供库文件名，用find_library(var name HINTS path PATH_SUFFIXES suff1 suff2), 即搜索名称为name的库文件(实际名称是libname.so)，找到后存入var中，
-  并可以带多个关键参数，其中HINTS关键参数代表搜索路径，PATH_SUFFIXES代表路径后缀
-```
-find_library(_NVINFER_LIB nvinfer HINTS ${TRT_LIB} PATH_SUFFIXES lib lib64)
-```
-- 查找头文件需提供头文件名，用find_path()
-
-13. cmake高级指令find_package: 是另外一种查找头文件和库文件的方法，是针对第三方库的常用方法(比如CUDA/opencv)。
-- 如果要使用find_package()查找第三方库的头文件和链接库文件路径：
-注意：采用find_package()命令cmake的模块查找顺序是：先在变量${CMAKE_MODULE_PATH}查找，然后在/usr/shared/cmake/Modules/里边查找。
-```
-find_package(CUDA REQUIRED)           # 查找某个第三方库的cmake module，比如CUDA代表的就是FindCUDA.cmake这个module
-find_package(OpenCV REQUIRED)         # 多个库分别查找， 然后统一加到include_directories和link_libraries即可 
-target_include_directories(tensorrt PUBLIC ${CUDA_INCLUDE_DIRS} ${TENSORRT_INCLUDE_DIR})
-target_link_libraries(tensorrt ${CUDA_LIBRARIES} ${TENSORRT_LIBRARY} ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cudart_static_LIBRARY} ${OpenCV_LIBS})
-```
-- 如果要查看cmake所自带支持的所有module和内容，就在如下路径中：
-```
-/usr/shared/cmake/Modules/    # 这个路径下所有FindXXXX.cmake都是cmake module文件(大部分是以Find开头，也有不是这么开头的)
-```
-- 如果要为自己写的库定义一个cmake module，则本质上就是先自己查找好头文件、库文件路径，然后欧放到某几个变量中。
-并且cmake统一规定这几个变量的写法：name_FOUND, name_INCLUDE_DIR, name_LIBRARY.
-从而只要知道某些库的module关键字(一般大写)，然后运行find_package(关键字)，然后就能得到两个变量：关键字_INCLUDE_DIR, 关键字_LIBRARY，从而就可以用include_directories(), link_libraries()进行设置了。
-```
-#　如下是一个名为FindTEST.cmake的module的写法: 关键字是TEST
-# 先找到自己安装的头文件(test.h): 为了避免安装时prefix路径设置不同，这里同时在两个默认存放头文件的路径寻找，一个是所有用户路径，一个是登录用户路径。
-find_path(TEST_INCLUDE_DIR test.h /usr/include/mytest      # 表示寻找test.h文件，找到则把路径赋值给变量TEST_INCLUDE_DIR
-        /usr/local/include/mytest)              
-# 再找到自己安装的动态库(libmytest.so): 为了避免安装时prefix路径设置不同，这里也同时在两个路径搜索
-find_library(TEST_LIBRARY NAMES mytest PATH /usr/lib       #　NAMES是关键字,表示寻找名称为mytest(实际名称libmytest.so)的头文件，PATH也是关键字，表示在接下来2个路径中寻找
-        usr/local/lib)                         
-
-if(TEST_INCLUDE_DIR AND TEST_LIBRARY)      # 如果找到则设置标志
-    set(TEST_FOUND TRUE)
-endif(TEST_INCLUDE_DIR AND TEST_LIBRARY)
-```
-
-- 可见：如果已知头文件库文件路径，可直接用target_include_directories()和target_link_libraries()进行添加。
-  而如果不知道头文件库文件路径，可以有另外2个方法，一种采用find_package()相当于变量赋值然后用target_include_directories()和target_link_libraries()设置即可。
-  另一种采用find_library()和
 
 14. 一些cmake常见编译错误
 - cmake版本太低：比如clion自带cmake的版本较高，但我系统的cmake版本较低，如果在命令行cmake ..则会提示版本太低无法编译，
@@ -880,6 +882,39 @@ sizeof(arr2);    // 而指针名却只是类型长度。
 
 1. 使用静态数组，也就是c++默认的数组，数组中可以放任何对象，比如char,string...
 缺点是：必须在初始化固定长度，且不能增加长度
+
+- 区分数组名和指针：(CP-424)
+参考：https://www.cnblogs.com/chenyangyao/p/5222696.html，他把数组名/数组指针解释的非常完整清晰。
+注意1：数组名是一个神奇的存在，数组名本身代表首元素地址，所以是元素指针，因此*a等于首元素值。
+   同时数组名作为指针可以再取地址，获得的指针地址虽然相同，但类型变成了数组类型指针，代表指向指针的指针。
+   因此可以这么理解：数组名大多数情况下可以当成元素指针，a+1，sizeof(a)，都是元素层面的值
+   但当数组名取地址以后，就需要当成数组指针，&a+1, sizeof(&a)，都是数组层面的值
+```
+int a[3] = {1,2,3};
+int *p = a;        //正确：可见p跟a都是元素类型指针，可以赋值成功
+
+int (*q)[3] = &a;  //正确：可见q跟&a都是数组类型指针，可以赋值成功
+```
+   
+注意2：区分数组类型指针和元素类型指针，其中普通指针是一个元素类型的指针，一维数组名也是元素类型指针，而二维数组名是数组类型指针，也就是指向指针的指针。
+   元素类型指针和数组类型指针的类型不同，两者不能相互赋值会报类型匹配错误。
+   数组类型指针(即指向指针的指针)获取元素的方式是**pt。
+注意：new int返回的元素类型指针，new int[3]返回的也是元素指针，而new int[3][2]返回的是数组指针
+```
+int *p;           // p是元素类型指针
+int q[3];         // q是一维数组名，也是元素类型指针 
+int *r[2];        // r是一维数组名，也是元素类型指针，只不过元素也是指针
+int (*s)[2];      // s是数组类型指针，也就是指向指针的指针
+
+p = q;            // 正确：p与q都是元素类型的指针，可以赋值
+p = new int[3]    // 正确：new int[]是元素类型指针
+p = new int[3][2] // 报错：p是元素类型指针，而new这里出来的是数组类型指针
+q = new int[3][2] // 报错，q是元素类型指针，而new这里出来的是数组类型指针
+
+int **t;      // t也是指向指针的指针，但t是指向元素指针的指针，而s是指向数组名的指针
+t = s;        // 貌似会报错，因为数组名指针不完全等于指针，TODO:按照前面几个例子理解，数组名可以赋值给一个元素指针。
+```
+
 - 数组基本用法
 ```
 // 数值数组初始化
@@ -917,6 +952,24 @@ using aten = int[10];            // 等价于typedef int aten[10], 用typedef不
 aten *func(int *a, int *b)       // 为了免去写数组的维度，可以先用using定义一个带维度的别名，从而函数能够返回一个数组。
 
 ```
+
+- 静态数组中的高维数组：
+注意：a[2][4]代表的是2行4列的二维数组，本质上其实是数组的数组，也就是4个元素为一个数组，一共2个数组组成数组。
+其中行数也就是第一个维度代表数组中数组的个数，第二个维度代表每个子数组的元素个数。
+注意：二维数组名本质上就是指向数组的指针，他指向第一个数组的首元素。但是：指向数组的指针并不能直接赋值给一个普通指针。
+```
+int a[2][4] = {{1,2,3,4},{5,6,7,8}};
+int a[2][4] = {1,2,3,4,5,6,7,8};          // 两种初始化方式等效
+
+int *p = a = a[0] = &a[0][0];      // 数组名是一个指针，数组名指针等效于数组中第一个子数组的地址，数组名指针等效于数组中第一个元素的地址。
+int (*p)[4] = a;                   // p为指针，指向一个元素为int长度为3的数组。跟前面一句等效：p为一个指向4元素数组的指针。    
+
+// 注意不能把一个指向数组的指针赋值给普通指针！
+int *p; p = new int[4][2];       // 这种会报错，相当于用数组指针来初始化普通指针。
+int p[4][2]; p = new int[4][2];  // 这种也会报错，
+int (*p)[2]; p = new int[4][2];  // 这种不会报错！
+```
+
 
 2. 使用动态数组，也即是STL库里边的vector，他是顺序容器的代表(CP-292)
 优点是: 可以直接用a.size()获得长度，可存放任何别的数据类型，初始化后，可以用push_back()增加长度
@@ -1515,7 +1568,7 @@ public:
 ## 关于类的的多态(面向对象3大特性-多态：？？？)
 
 1. 基类把类成员分2类，一类是不希望派生类修改的，另一类是要求派生类取修改覆盖的，第二类就会声明为virtual(虚函数).
-- 虚函数定义的目的：
+- 虚函数定义的目的：当某个函数或对象需要调用多种不同的同类型对象或他们的方法，此时由于
 - 虚函数执行过程(CP-530)：首先是应用函数的形参必须是基类的指针或引用，然后应用函数调用时形参可以传入一个基类，也可传入一个派生类。如果传入派生类则会根据形参类型进行派生类到基类的类型转换。
   然后该形参指针就会绑定到该派生类对象的基类部分上，也就可以把该派生类当成基类类型使用，然后该指针调用某虚函数时，虚函数才会进行动态绑定(也称运行时绑定)，此时
   由于该指针指向的是派生类对象，所以调用的就会使派生类对象的虚函数。
