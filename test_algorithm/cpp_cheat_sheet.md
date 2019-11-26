@@ -241,6 +241,11 @@ if(TEST_INCLUDE_DIR AND TEST_LIBRARY)      # 如果找到则设置标志
     set(TEST_FOUND TRUE)
 endif(TEST_INCLUDE_DIR AND TEST_LIBRARY)
 ```
+- 如果因为安装位置变换，可能在默认路径找不到某个库的xx.cmake文件，此时需要手动设置name.cmake对应name_DIR路径，才能被find_package搜索到。
+```
+set(OpenCV_DIR /home/ubuntu/anaconda/shared/OpenCV)    // 由于安装不是在
+find_package(OpenCV REQUIRED)                          // 找到以后，就能使用这些变量：OpenCV_LIBS, 
+```
 
 - 可见：如果已知头文件库文件路径，可直接用target_include_directories()和target_link_libraries()进行添加。
   而如果不知道头文件库文件路径，可以有另外2个方法，一种采用find_package()相当于变量赋值然后用target_include_directories()和target_link_libraries()设置即可。
@@ -255,7 +260,8 @@ message(STATUS "messages")
 ```
 
 7. file()对文件和文件夹的操作：比如搜索文件、打开文件、写入文件
-- 如果要自动搜索所有支持文件，则可以考虑自动搜索命令
+- 如果要自动搜索所有支持文件，则可以考虑自动搜索命令, 其中GLOB关键字代表只在当前路径下搜索文件，GLOB_RECURSE则代表递归搜索路径和子路径下所有文件。
+- 注意用file()来搜索源文件列表有个缺陷：如果自己增加了文件，但cmakelists没有改过，则这个文件不会自动被加进来，除非重新cmake。
 ```
 file(GLOB Sources *.cpp)
 file(GLOB Includes *.h)

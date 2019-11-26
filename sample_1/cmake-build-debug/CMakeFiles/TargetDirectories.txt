@@ -1,0 +1,5 @@
+/home/ubuntu/suliang_git/deep_learning_inference/sample_1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/suliang_git/deep_learning_inference/sample_1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/ubuntu/suliang_git/deep_learning_inference/sample_1/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/suliang_git/deep_learning_inference/sample_1/cmake-build-debug/src/CMakeFiles/sample_1.dir
+/home/ubuntu/suliang_git/deep_learning_inference/sample_1/cmake-build-debug/src/CMakeFiles/edit_cache.dir

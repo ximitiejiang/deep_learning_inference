@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/onnx_mnist.dir/main.cpp.o  -o onnx_mnist -Wl,-rpath,/home/ubuntu/TensorRT-6.0.1.5/lib:/usr/local/cuda-9.0/lib64 /home/ubuntu/TensorRT-6.0.1.5/lib/libnvinfer.so /usr/local/cuda-9.0/lib64/libcublas.so /usr/local/cuda-9.0/lib64/libcudart.so 
