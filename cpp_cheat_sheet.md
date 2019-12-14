@@ -116,7 +116,7 @@ cmake ..       //或者cmake.这里两个点表示在上层文件夹下寻找cma
 make           //执行makefile
 make install   //(optional)安装
 
-make clean     // 清理工程
+make clean     // 清理工程 ""
 ```
 2. cmake的调试很简单：写好以后，把相应的输出通过message()打印出来进行验证，然后在clion的cmake选项卡里边就能够看到输出了。
 注意：不是在terminal终端看到的，也不是在message选项卡看到。而是在cmake选项卡中有显示。
