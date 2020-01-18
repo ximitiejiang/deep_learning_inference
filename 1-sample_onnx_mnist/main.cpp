@@ -324,9 +324,21 @@ void printHelpInfo()
 int main(int argc, char** argv)
 {
     samplesCommon::Args args;
+    // 解析输入参数：传入的args用来记录解析的结果，比如存入datadir，比如设置true or false
+    // 用Args结构体来作为函数的输出：因为c++的函数输出只能是一个数值，不能输出其他类型的数据，所以一般都用来输出bool或int表示结果是否成功，而真正的参数传递则通过形参进入的变量带出来。
+    // samplesCommon::Args结构体的结构如下，获取到了3个bool变量，和一个dataDirs字符串数组
+	//    struct Args
+	//    {
+	//        bool runInInt8{false};
+	//        bool runInFp16{false};
+	//        bool help{false};
+	//        int useDLACore{-1};
+	//        std::vector<std::string> dataDirs;
+	//    };
     bool argsOK = samplesCommon::parseArgs(args, argc, argv);
     if (!argsOK)
     {
+    	//gLogError是一个LogStreamConsumer类型(logger.h->logging.h)，该类公有继承自std::ostream
         gLogError << "Invalid arguments" << std::endl;
         printHelpInfo();
         return EXIT_FAILURE;
@@ -337,6 +349,9 @@ int main(int argc, char** argv)
         return EXIT_SUCCESS;
     }
 
+    // gLogger类继承自Logger类(logger.h->logging.h)
+    // 该Logger类继承自nvinfer1::ILogger
+    // defineTest用来返回一个TestAtom对象：先把argc, argv转换成
     auto sampleTest = gLogger.defineTest(gSampleName, argc, argv);
 
     gLogger.reportTestStart(sampleTest);

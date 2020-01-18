@@ -9,6 +9,7 @@ CUDA_INSTALL_DIR ?= /usr/local/cuda
 CUDNN_INSTALL_DIR ?= /usr/local/cuda
 TRT_DIR = /home/ubuntu/TensorRT-6.0.1.5
 # 在目标平台x86_64下cuda/cudnn的头文件和库文件路径
+# nvcc相当于nvidia的代码编译器，检查cucc
 CUDA_LIBDIR = lib64
 CUDNN_LIBDIR = lib64
 CC = g++

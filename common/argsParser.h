@@ -148,7 +148,7 @@ inline bool parseArgs(Args& args, int argc, char* argv[])
         switch (arg)
         {
         case 'h':
-            args.help = true;
+            args.help = true;ux
             return true;
         case 'd':
             if (optarg)
